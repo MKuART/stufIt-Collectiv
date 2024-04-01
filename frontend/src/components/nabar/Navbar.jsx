@@ -1,29 +1,59 @@
-import { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { useState } from 'react';
+import { NavLink, Outlet, useNavigate, Routes, Route } from 'react-router-dom';
 import Join from '../join/Join.jsx';
+import Login from '../login/Login.jsx';
+import Dashboard from '../dashboard/Dashboard.jsx';
+import Registry from '../registry/Registry.jsx';
+import Gast from '../gast/Gast.jsx';
 
 function Navbar() {
-    const [ login, setLogin ] = useState(false)
-    const toggleLogin = () => {
-        setLogin(prevLogin => !prevLogin);
+    const [userId, setUserId] = useState(null);
+    const navigate = useNavigate();
+
+    const handleLogin = () => {
+        const defaultUserId = '123';
+        setUserId(defaultUserId);
+        navigate('/dashboard'); 
+    };
+
+    const handleLogout = () => {
+        setUserId(null);
     };
 
     return (
         <>
-            <nav style={{ border: '1px solid red', height: '90px' }}>
-            <button onClick={toggleLogin}>
-                {login ? 'Logout' : 'Login'}
-            </button>
+            <nav style={{ border: '1px solid red', height: '90px', display:'flex' }}>
+                <button onClick={userId ? handleLogout : handleLogin}>
+                    {userId ? 'Logout' : 'Login'}
+                </button>
                 <ul>
-                    <li>
-                        <NavLink to='/login'>Anmeldung</NavLink>
-                    </li>
+                    {!userId && (
+                        <li>
+                            <NavLink to='/login'>Login</NavLink>
+                        </li>
+                    )}
+                    {!userId && (
+                        <li>
+                            <NavLink to='/registry'>Registry</NavLink>
+                        </li>
+                    )}
+                    {!userId && (
+                        <li>
+                            <NavLink to='/gast'>Gast</NavLink>
+                        </li>
+                    )}
                 </ul>
             </nav>
-            {login ? null : <Join />}
-            <Outlet />
+            <Routes>
+                {/* Definiere Routen für Anmeldung, Dashboard und Fallback */}
+                <Route path="/login" element={<Login onLogin={handleLogin} />} />
+                <Route path="/registry" element={<Registry onLogin={handleLogin} />} />
+                <Route path="/gast" element={<Gast onLogin={handleLogin} />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/" element={<Join />} />
+            </Routes>
         </>
     );
 }
 
-export default Navbar
+export default Navbar;
