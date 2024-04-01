@@ -10,7 +10,7 @@ function Navbar() {
 
     return (
         <>
-            <nav style={{ border: '1px solid red', height: '100px' }}>
+            <nav style={{ border: '1px solid red', height: '90px' }}>
             <button onClick={toggleLogin}>
                 {login ? 'Logout' : 'Login'}
             </button>
