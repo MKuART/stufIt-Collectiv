@@ -1,7 +1,7 @@
-import Account from "../models/Account";
-import Customer from "../models/Customer";
-import Expenses from "../models/Expenses";
-import Category from "../models/Category";
+import Account from "../models/Account.js";
+import Customer from "../models/Customer.js";
+import Expenses from "../models/Expenses.js";
+import Category from "../models/Category.js";
 
 // To get all Models
 
