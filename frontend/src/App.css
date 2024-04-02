@@ -14,6 +14,7 @@ body {
   border-radius: 0px;
   border: none;
   background-color: #545f66;
+  color: #ffffff;
 }
 .title{
   text-align: center;
@@ -22,4 +23,12 @@ body {
 .title h2 {
   color: #ffffff;
   font-size: 40px;
+}
+
+.form{
+  width: 80%;
+}
+h3{
+  font-size: 18px;
+  color: #ffffff;
 }
