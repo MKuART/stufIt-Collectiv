@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { NavLink, useNavigate, Routes, Route } from 'react-router-dom';
+import './navbar.css';
+import { NavLink, Outlet, useNavigate, Routes, Route } from 'react-router-dom';
 import Join from '../join/Join.jsx';
 import Login from '../login/Login.jsx';
 import Dashboard from '../dashboard/Dashboard.jsx';
@@ -23,6 +24,17 @@ function Navbar() {
     return (
         <>
             <nav style={{ border: '1px solid red', height: '90px', display:'flex' }}>
+                <div className='logo-container'>
+                    <div className='cards-container'>
+                        <div className='card a-card'></div>
+                        <div className='card b-card'></div>
+                        <div className='card c-card'>0930934827349</div>
+                        <div className='card d-card'></div>
+                        <div className='card f-card'></div>
+                        <div className='card g-card'></div>
+                    </div>
+                    <h2 className='logo-text'>Stuffit</h2>
+                </div>
                 <button onClick={userId ? handleLogout : handleLogin}>
                     {userId ? 'Logout' : 'Login'}
                 </button>
