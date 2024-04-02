@@ -1,6 +1,6 @@
 import {createBrowserRouter } from 'react-router-dom';
 import Navbar from '../components/nabar/Navbar.jsx';
-import Join from '../components/join/Join.jsx';
+/* import Join from '../components/join/Join.jsx'; */
 import Login from '../components/login/Login.jsx';
 import Dashboard from '../components/dashboard/Dashboard.jsx';
 import Registry from '../components/registry/Registry.jsx';
@@ -28,5 +28,7 @@ export const router = createBrowserRouter([
                 element: <Gast/>
             }
         ]
+        
     }
+    
 ])

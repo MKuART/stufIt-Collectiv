@@ -1,7 +1,25 @@
 #root {
-
   margin: 0 auto;
-
 }
 
+body {
+  background-color: #545f66;
+}
 
+.join-container{
+  background-color: #d499b9;
+}
+
+.btn{
+  border-radius: 0px;
+  border: none;
+  background-color: #545f66;
+}
+.title{
+  text-align: center;
+}
+
+.title h2 {
+  color: #ffffff;
+  font-size: 40px;
+}
