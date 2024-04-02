@@ -1,5 +1,5 @@
 import express from "express"
-import { AllExpenses, createExpenses, softDeleteExpenses, updateExpenses } from "../controller/MainController";
+import { AllExpenses, createExpenses, softDeleteExpenses, updateExpenses } from "../controller/MainController.js";
 
 const router = express.Router()
 
