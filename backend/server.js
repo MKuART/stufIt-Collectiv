@@ -10,7 +10,7 @@ import { invalid } from "./middlewares/invalid.js"
 import { errorHandler } from "./middlewares/errorHandler.js"
 
 const app = express();
-const PORT = process.env.PORT || 500;
+const PORT = process.env.PORT || 5000;
 const MONGO_DB_URI = process.env.MONGO_DB_URI || 'mongodb://localhost:27017';
 
 app.use(morgan(`dev`));
