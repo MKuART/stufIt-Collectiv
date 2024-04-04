@@ -27,10 +27,10 @@ function Login() {
       });
 
       if (response.ok) {
-        // Handle successful login
+        // Erfolgreich eingeloggt
         console.log('Erfolgreich eingeloggt');
       } else {
-        // Handle login error
+        // Fehler beim Einloggen
         console.error('Fehler beim Einloggen:', response.statusText);
       }
     } catch (error) {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './navbar.css';
-import { NavLink, Outlet, useNavigate, Routes, Route } from 'react-router-dom';
+import { NavLink, useNavigate, Routes, Route } from 'react-router-dom';
 import Join from '../join/Join.jsx';
 import Login from '../login/Login.jsx';
 import Dashboard from '../dashboard/Dashboard.jsx';

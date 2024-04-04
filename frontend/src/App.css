@@ -16,6 +16,12 @@ body {
   background-color: #545f66;
   color: #ffffff;
 }
+
+.btn:hover{
+  background-color: #888f93;
+  color: #ffffff;
+}
+
 .title{
   text-align: center;
 }
