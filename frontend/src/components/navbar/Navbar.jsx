@@ -6,8 +6,10 @@ import Login from '../login/Login.jsx';
 import Dashboard from '../dashboard/Dashboard.jsx';
 import Registry from '../registry/Registry.jsx';
 import Gast from '../gast/Gast.jsx';
+import Navbar from 'react-bootstrap/Navbar';
+import Logo from './logo/Logo.jsx'
 
-function Navbar() {
+function NavbarCompo() {
     const [userId, setUserId] = useState(null);
     const navigate = useNavigate();
     const [showDropdown, setShowDropdown] = useState(false);
@@ -30,26 +32,26 @@ function Navbar() {
 
     return (
         <>
-            <nav style={{ border: '1px solid red', height: '90px', display:'flex' }}>
-                <div className='logo-container'>
-                    <div className='cards-container'>
-                        <div className='card a-card'></div>
-                        <div className='card b-card'></div>
-                        <div className='card c-card'>0930934827349</div>
-                        <div className='card d-card'></div>
-                        <div className='card f-card'></div>
-                        <div className='card g-card'></div>
-                    </div>
-                    <h2 className='logo-text'>Stuffit</h2>
-                </div>
+            <Navbar 
+                expand="lg" className=" nav-container" 
+            >
+                <Logo></Logo>
+
                 <button onClick={userId ? handleLogout : handleLogin}>
                     {userId ? 'Logout' : 'Login'}
                 </button>
+
                 <div
                     onClick={ toggleDropdown } 
                     className='drop-down-container' 
-                    style={{ border: '1px solid red', height: '90px', width: '200px'}} >
+                    >
+                    <div className='white-bar'></div>
+                    <div className='white-bar'></div>
+                    <div className='white-bar'></div>
                 {showDropdown && (
+
+                <div className='dropdown'>
+
                 <ul>
                     {userId && (
                         <li>
@@ -82,10 +84,11 @@ function Navbar() {
                         </li>
                     )}
                 </ul>
+                </div>
 
                 )}
                 </div>
-            </nav>
+            </Navbar>
             <Routes>
                 <Route path="/login" element={<Login onLogin={handleLogin} />} />
                 <Route path="/registry" element={<Registry onLogin={handleLogin} />} />
@@ -97,4 +100,4 @@ function Navbar() {
     );
 }
 
-export default Navbar;
+export default NavbarCompo;
