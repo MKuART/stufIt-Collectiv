@@ -10,16 +10,23 @@ import Gast from '../gast/Gast.jsx';
 function Navbar() {
     const [userId, setUserId] = useState(null);
     const navigate = useNavigate();
+    const [showDropdown, setShowDropdown] = useState(false);
+
 
     const handleLogin = () => {
         const defaultUserId = '123';
         setUserId(defaultUserId);
-        navigate('/dashboard'); 
+        navigate('/profile'); 
     };
 
     const handleLogout = () => {
         setUserId(null);
     };
+
+    const toggleDropdown = () => {
+        setShowDropdown(!showDropdown);
+    };
+
 
     return (
         <>
@@ -38,7 +45,27 @@ function Navbar() {
                 <button onClick={userId ? handleLogout : handleLogin}>
                     {userId ? 'Logout' : 'Login'}
                 </button>
+                <div
+                    onClick={ toggleDropdown } 
+                    className='drop-down-container' 
+                    style={{ border: '1px solid red', height: '90px', width: '200px'}} >
+                {showDropdown && (
                 <ul>
+                    {userId && (
+                        <li>
+                            <NavLink to='/dashboard'>Dashboard</NavLink>
+                        </li>
+                    )}
+                    {userId && (
+                        <li>
+                            <NavLink to='/profile'>Profile</NavLink>
+                        </li>
+                    )}
+                    {userId && (
+                        <li>
+                            <button onClick={handleLogout}>Logout</button>
+                        </li>
+                    )}
                     {!userId && (
                         <li>
                             <NavLink to='/login'>Login</NavLink>
@@ -55,9 +82,11 @@ function Navbar() {
                         </li>
                     )}
                 </ul>
+
+                )}
+                </div>
             </nav>
             <Routes>
-                {/* Definiere Routen für Anmeldung, Dashboard und Fallback */}
                 <Route path="/login" element={<Login onLogin={handleLogin} />} />
                 <Route path="/registry" element={<Registry onLogin={handleLogin} />} />
                 <Route path="/gast" element={<Gast onLogin={handleLogin} />} />
