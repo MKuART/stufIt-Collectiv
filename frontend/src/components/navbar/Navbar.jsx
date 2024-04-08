@@ -3,6 +3,7 @@ import './navbar.css';
 import { NavLink, useNavigate, Routes, Route } from 'react-router-dom';
 import Join from '../join/Join.jsx';
 import Login from '../login/Login.jsx';
+import Profile from '../profile/Profile.jsx';
 import Dashboard from '../dashboard/Dashboard.jsx';
 import Registry from '../registry/Registry.jsx';
 import Gast from '../gast/Gast.jsx';
@@ -93,6 +94,7 @@ function NavbarCompo() {
                 <Route path="/login" element={<Login onLogin={handleLogin} />} />
                 <Route path="/registry" element={<Registry onLogin={handleLogin} />} />
                 <Route path="/gast" element={<Gast onLogin={handleLogin} />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/" element={<Join />} />
             </Routes>

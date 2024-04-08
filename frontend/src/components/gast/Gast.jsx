@@ -1,26 +1,32 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
 function Gast() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const navigate = useNavigate();
 
   const handleFirstNameChange = (event) => {
-    setFirstName(event.target.value);
+    const value = event.target.value.replace(/[^a-zA-Z]/g, '');
+    setFirstName(value);
   };
 
   const handleLastNameChange = (event) => {
-    setLastName(event.target.value);
+    const value = event.target.value.replace(/[^a-zA-Z]/g, '');
+    setLastName(value);
   };
 
-  const handleLogin = () => {
-    // Hier könntest du die Gastanmeldung implementieren
-    // Zum Beispiel: Speichern der Gastinformationen im lokalen Speicher oder in einem State-Management-Tool
-    const guestInfo = { firstName, lastName };
-    console.log('Gast angemeldet:', guestInfo);
-    // Hier könnte eine Weiterleitung zu einer Seite erfolgen, auf die der Gast zugreifen darf
-    // Beispiel: window.location.href = '/erlaubte-seite';
+  const handleLogin = (event) => {
+    event.preventDefault();
+    
+    if (firstName.trim() !== '' && lastName.trim() !== '') {
+      const guestInfo = { firstName, lastName };
+      console.log('Gast angemeldet:', guestInfo);
+      navigate(`/profile?firstName=${firstName}&lastName=${lastName}`); // Daten als Abfrageparameter übergeben
+    } else {
+      alert('Bitte füllen Sie Vorname und Nachname aus.');
+    }
   };
 
   return (
