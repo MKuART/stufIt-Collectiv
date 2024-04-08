@@ -1,0 +1,66 @@
+.logo-container {
+    background-color: #71A9F7;
+    height: 100px; 
+    width: 100px;
+    border-radius: 16px;
+}
+.cards-container {
+
+    height: 100px; 
+    width: 100px;
+    position: absolute;
+    left: 12px;
+}
+.logo-text {
+    position: absolute;
+    top: 80px;
+    left: 50px;
+    font-size: 2.7rem;
+    display: none;
+}
+.card {
+
+    height: 30px; 
+    width: 60px;
+    position: absolute;
+    top: 15px;
+    transform: rotate(60deg);
+    border-radius: 0px;
+}
+.a-card {
+    top: 40px;
+    left: -10px;
+    
+}
+.b-card {
+    border: 1px solid purple;
+    top: 25px;
+    left: 20px;
+    transform: rotate(80deg);
+}
+.c-card {
+    border: 1px solid greenyellow;
+    top: 30px;
+    font-size: 0.25rem;
+    transform: rotate(70deg);
+}
+.d-card {
+    border: 1px solid royalblue;
+    top: 35px;
+    left: 25px;
+    height: 35px;
+    transform: rotate(80deg);
+}
+.f-card {
+    border: 1px solid orangered;
+    top: 45px;
+    left: -7px;
+    height: 35px;
+}
+.g-card {
+    border: 1px solid green;
+    top: 40px;
+    left: 5px;
+    height: 35px;
+    transform: rotate(70deg);
+}

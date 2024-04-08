@@ -1,67 +1,43 @@
-.logo-container {
-    background-color: white;
-    border: 1px solid red;
-    height: 200px; 
-    width: 200px;
+
+.nav-container {
+    background-color: #545F66;    
+    height: 90px;
+    display: flex;
+    justify-content: space-between;
+    margin: 4px;
+    padding: 0px;
 }
-.cards-container {
-    border: 1px solid red;
-    height: 100px; 
+
+ul {
+    position: absolute;
+    top: 90px;
+}
+
+.drop-down-container {
+    background: #71A9F7;
+    height: 90px; 
     width: 100px;
+    top: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+}
+
+.white-bar {
+    background: white;
+    border-radius: 16px;
+    height: 16px;
+    width: 64px;
+    margin: 4px;
+
+}
+
+.dropdown {
+    background: ;
     position: absolute;
-    top: 30px;
-    left: 30px;
-}
-.logo-text {
-    position: absolute;
-    top: 80px;
-    left: 50px;
-    font-size: 2.7rem;
-    display: none;
-}
-.card {
-    border: 1px solid red;
-    height: 30px; 
-    width: 60px;
-    position: absolute;
-    top: 15px;
-    transform: rotate(60deg);
-    border-radius: 0px;
-}
-.a-card {
-    top: 40px;
-    left: -10px;
-    
-}
-.b-card {
-    border: 1px solid purple;
-    top: 25px;
-    left: 20px;
-    transform: rotate(80deg);
-}
-.c-card {
-    border: 1px solid greenyellow;
-    top: 30px;
-    font-size: 0.25rem;
-    transform: rotate(70deg);
-}
-.d-card {
-    border: 1px solid royalblue;
-    top: 35px;
-    left: 25px;
-    height: 35px;
-    transform: rotate(80deg);
-}
-.f-card {
-    border: 1px solid orangered;
-    top: 45px;
-    left: -7px;
-    height: 35px;
-}
-.g-card {
-    border: 1px solid green;
-    top: 40px;
-    left: 5px;
-    height: 35px;
-    transform: rotate(70deg);
+    height: 200px;
+    width: 48%;
+    top: 20px; 
 }
