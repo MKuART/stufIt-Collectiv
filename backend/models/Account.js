@@ -8,8 +8,8 @@ const Account = Schema(
     password: {type: String, required: true},
     budget: { type: Number, default: 0 },
     deleted: { type: String, default: false },
-    customer: { type: Schema.Types.ObjectId, ref: "Customer" },
-    category: { type: Schema.Types.ObjectId, ref: "Category" },
+    customer: [{ type: Schema.Types.ObjectId, ref: "Customer" }],
+    category: [{ type: Schema.Types.ObjectId, ref: "Category" }],
     role: {type: String, enum: ["User", "Admin"], default: "Admin"},
   },
   { versionKey: false, strictQuery: true }
