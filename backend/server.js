@@ -14,7 +14,9 @@ const PORT = process.env.PORT || 5000;
 const MONGO_DB_URI = process.env.MONGO_DB_URI || 'mongodb://localhost:27017';
 
 app.use(morgan(`dev`));
-app.use(cors());
+app.use(cors({credentials: true, origin: "http://localhost:5173"}));
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
