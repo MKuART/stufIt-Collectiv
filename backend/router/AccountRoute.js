@@ -1,5 +1,5 @@
 import express from "express"
-import { AllAccounts, createAccount, softDeleteAccount, updateAccount } from "../controller/MainController.js";
+import { AllAccounts, createAccount, softDeleteAccount, updateAccount} from "../controller/MainController.js";
 
 const router = express.Router()
 
@@ -12,7 +12,7 @@ router
 .post(createAccount)
 
 router
-.route("/update")
+.route("/update/:id")
 .patch(updateAccount)
 
 router

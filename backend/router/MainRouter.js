@@ -2,7 +2,7 @@ import express from "express"
 
 import CustomerRoute from "./CustomerRoute.js"
 import AccountRoute from "./AccountRoute.js"
-import ExpensesRoute from "./AccountRoute.js"
+import ExpensesRoute from "./ExpensesRoute.js"
 import CategoryRoute from "./CategoryRoute.js"
 
 const router = express.Router()

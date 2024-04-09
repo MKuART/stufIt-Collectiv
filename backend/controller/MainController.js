@@ -45,14 +45,22 @@ export const AllCategorys = async (req, res, next) => {
 
 export const createCustomer = async (req, res, next) => {
   try {
-    res.status(200).json(
-      await Customer.create({
+    
+      const newCustomer = await Customer.create({
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         email: req.body.email,
         password: req.body.password,
+        account: req.body.account
       })
-    );
+    
+      await Account.updateMany(
+
+      {_id: newCustomer.account},
+      {$push: {customer: newCustomer._id}}
+      );
+
+      res.status(200).json(newCustomer);
   } catch (error) {
     error.status = 404;
     next(error);
@@ -67,6 +75,7 @@ export const createAccount = async (req, res, next) => {
         lastname: req.body.lastname,
         email: req.body.email,
         password: req.body.password,
+        customer: req.body.customer,
         budget: req.body.budget,
       })
     );
@@ -75,7 +84,7 @@ export const createAccount = async (req, res, next) => {
     next(error);
   }
 };
-
+/*
 export const createExpenses = async (req, res, next) => {
   try {
     res.status(200).json(
@@ -89,15 +98,62 @@ export const createExpenses = async (req, res, next) => {
     next(error);
   }
 };
+*/
+export const createExpenses = async (req, res, next) => {
+  try {
+    
+      const newExpense = await Expenses.create({
+        description: req.body.description,
+        cost: req.body.cost,
+        account: req.body.account,
+        category: req.body.category
+      });
+
+    if (!newExpense){
+      throw new Error(`Ausgabe konnte nicht erstellt werden.`);
+    }
+
+    await Category.updateMany(
+
+      {_id: newExpense.category},
+      {$inc: {limitedBudget: -newExpense.cost}}
+      );
+      
+
+      res.status(200).json(newExpense)
+  } catch (error) {
+    error.status = 404;
+    next(error);
+  }
+};
 
 export const createCategory = async (req, res, next) => {
   try {
-    res.status(200).json(
-      await Category.create({
+    
+      const newCategory = await Category.create({
         name: req.body.name,
         limitedBudget: req.body.limitedBudget,
-      })
+        account: req.body.account,
+        expense: req.body.expense
+      });
+
+    if (!newCategory){
+      throw new Error(`Kategorie konnte nicht erstellt werden.`);
+    }
+
+    await Account.updateMany(
+
+      {_id: newCategory.account},
+      {$inc: {budget: -newCategory.limitedBudget}}
     );
+    
+    await Account.updateMany(
+
+      {_id: newCategory.account},
+      {$push: {category: newCategory._id}}
+      );
+
+      res.status(200).json(newCategory)
   } catch (error) {
     error.status = 404;
     next(error);
@@ -178,7 +234,24 @@ export const updateCustomer = async (req, res, next) => {
 
 export const updateAccount = async (req, res, next) => {
   try {
-    const foundUser = await Account.findById(req.body._id);
+    
+    const updatedAccount = await Account.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    res.json(updatedAccount);
+  } catch (err) {
+    next(err);
+  }
+}
+
+
+
+/* Michas Code
+export const updateAccount = async (req, res, next) => {
+  try {
+    const foundUser = await Account.findByIdAndUpdate(req.params.id);
 
     if (!foundUser) {
       return res.status(404).json({ message: "Account not found!" });
@@ -214,6 +287,7 @@ export const updateAccount = async (req, res, next) => {
     next(error);
   }
 };
+*/
 
 export const updateCategory = async (req, res, next) => {
   try{
