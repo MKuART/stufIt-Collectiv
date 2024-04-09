@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-const Account = Schema(
+const Account = new Schema(
   {
     firstname: {type: String, required: true},
     lastname: {type: String, required: true},
