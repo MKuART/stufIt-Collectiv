@@ -497,7 +497,7 @@ export const isLoggedIn = async (req, res, next) => {
   if (!cookie) {
     const error = new Error("Cookie not found!")
     error.statusCode = 404;
-    next(error)
+   return next(error)
   }
   return res.status(200).send({ message: "Cookie sent" });
 };
