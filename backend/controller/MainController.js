@@ -50,10 +50,6 @@ export const createCustomer = async (req, res, next) => {
     
       const newCustomer = await Customer.create({
 
-    req.body.password = await hashPassword(req.body.password)
-    res.status(200).json(
-      await Customer.create({
-
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         email: req.body.email,
