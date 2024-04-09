@@ -36,3 +36,52 @@ export const customerValidator = [
     .normalizeEmail()
     .escape()
 ]
+
+export const customerUpdateValidator = (fieldsToUpdate) => {
+  const validators = [];
+
+  if (fieldsToUpdate.includes("firstname")) {
+    validators.push(
+      body("firstname")
+        .if(body("firstname").exists({ checkFalsy: true }))
+        .trim()
+        .isString()
+        .escape()
+    );
+  }
+
+  if (fieldsToUpdate.includes("lastname")) {
+    validators.push(
+      body("lastname")
+        .if(body("lastname").exists({ checkFalsy: true }))
+        .trim()
+        .isString()
+        .escape()
+    );
+  }
+
+  if (fieldsToUpdate.includes("password")) {
+    validators.push(
+      body("password")
+        .if(body("password").exists({ checkFalsy: true }))
+        .trim()
+        .isStrongPassword()
+        .withMessage("Password is not safe enough")
+        .isLength({ min: 8 })
+        .escape()
+    );
+  }
+
+  if (fieldsToUpdate.includes("email")) {
+    validators.push(
+      body("email")
+        .if(body("email").exists({ checkFalsy: true }))
+        .trim()
+        .isEmail()
+        .normalizeEmail()
+        .escape()
+    );
+  }
+
+  return validators;
+};

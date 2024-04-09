@@ -4,19 +4,20 @@ import CustomerRoute from "./CustomerRoute.js"
 import AccountRoute from "./AccountRoute.js"
 import ExpensesRoute from "./ExpensesRoute.js"
 import CategoryRoute from "./CategoryRoute.js"
+import { authorize } from "../controller/MainController.js"
 
 const router = express.Router()
 
 router
-.use("/customer", CustomerRoute)
+.use("/customer", authorize(["User, Admin"]), CustomerRoute)
 
 router
-.use("/account", AccountRoute)
+.use("/account", authorize(["Admin"]), AccountRoute)
 
 router
-.use("/expenses", ExpensesRoute)
+.use("/expenses", authorize(["User", "Admin"]), ExpensesRoute)
 
 router
-.use("/category", CategoryRoute)
+.use("/category", authorize(["Admin"]), CategoryRoute)
 
 export default router;

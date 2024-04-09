@@ -8,6 +8,7 @@ const Customer = new Schema({
     password: {type: String, required: true},
     account: [{type: Schema.Types.ObjectId, ref: "Account"}],
     role: {type: String, enum: ["User", "Admin"], default: "User"},
+    account: [{ type: Schema.Types.ObjectId, ref: "Account" }],
     deleted: {type: String, default: false}
 }, {versionKey: false, strictQuery: true})
 

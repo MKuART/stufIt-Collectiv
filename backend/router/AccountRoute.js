@@ -1,22 +1,23 @@
+
 import express from "express"
 import { AllAccounts, createAccount, softDeleteAccount, updateAccount} from "../controller/MainController.js";
+import express from "express";
+import { AllAccounts, createAccount, softDeleteAccount, updateAccount } from "../controller/MainController.js";
+import { accountUpdateValidator, accountValidator, validateRequest } from "../middlewares/validator/accountValidator.js";
 
-const router = express.Router()
 
-router
-.route("/")
-.get(AllAccounts)
+const router = express.Router();
 
-router
-.route("/create")
-.post(createAccount)
+router.route("/")
+    .get(AllAccounts);
 
-router
-.route("/update/:id")
-.patch(updateAccount)
+router.route("/create")
+    .post(accountValidator, validateRequest, createAccount);
 
-router
-.route("/soft-delete")
-.delete(softDeleteAccount)
+router.route("/update")
+    .patch(accountUpdateValidator(["firstname", "lastname", "email", "password", "budget"]), validateRequest, updateAccount);
+
+router.route("/soft-delete")
+    .delete(softDeleteAccount);
 
 export default router;
