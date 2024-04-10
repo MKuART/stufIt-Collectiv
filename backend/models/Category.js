@@ -5,7 +5,8 @@ const Category = new Schema(
   {
     name: {type: String, default: "N/A"},
     limitedBudget: {type: Number, default: 0},
-    account: [{ type: Schema.Types.ObjectId, ref: "Account"}],// expenses: [ExpensesSchema]
+    account: [{ type: Schema.Types.ObjectId, ref: "Account"}],
+    expense: [{type: Schema.Types.ObjectId, ref: "Expenses"}]
   },
   { versionKey: false, strictQuery: true }
 );

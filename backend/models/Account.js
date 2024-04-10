@@ -10,6 +10,7 @@ const Account = new Schema(
     deleted: { type: String, default: false },
     customer: [{ type: Schema.Types.ObjectId, ref: "Customer" }],
     category: [{ type: Schema.Types.ObjectId, ref: "Category" }],
+    expense: [{type: Schema.Types.ObjectId, ref: "Expenses"}],
     role: {type: String, enum: ["User", "Admin"], default: "Admin"},
   },
   { versionKey: false, strictQuery: true }

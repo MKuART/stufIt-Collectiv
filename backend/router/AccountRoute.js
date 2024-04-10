@@ -2,7 +2,6 @@ import express from "express"
 import { AllAccounts, accountLogin, authorize, createAccount, softDeleteAccount, updateAccount } from "../controller/MainController.js";
 import { accountUpdateValidator, accountValidator, validateRequest } from "../middlewares/validator/accountValidator.js";
 
-
 const router = express.Router();
 
 router.route("/")

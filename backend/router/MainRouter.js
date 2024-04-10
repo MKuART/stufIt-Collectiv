@@ -1,14 +1,16 @@
 import express from "express"
-
 import CustomerRoute from "./CustomerRoute.js"
 import AccountRoute from "./AccountRoute.js"
 import ExpensesRoute from "./ExpensesRoute.js"
 import CategoryRoute from "./CategoryRoute.js"
+
 import { authorize, isLoggedIn } from "../controller/MainController.js"
+
 
 const router = express.Router()
 
 router
+
 .use("/customer", CustomerRoute)
 
 router
@@ -23,5 +25,6 @@ router
 router
 .route("/check-cookie")
 .get(isLoggedIn)
+
 
 export default router;
