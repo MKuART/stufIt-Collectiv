@@ -28,7 +28,7 @@ function Profile() {
           <div style={{ marginBottom: '20px', width: '50%', maxWidth: '300px', minWidth: '150px' }}>Befugnis: </div>
           <input type="number" placeholder="Budget" value={budget} onChange={handleBudgetChange} style={{ marginBottom: '40px', padding: '5px', height: '5vh', width: '50%', maxWidth: '300px', minWidth: '150px' }} required />
           <Button type="submit" className='btn' variant="primary" style={{ height: '5vh', width: '30%', maxWidth: '300px', minWidth: '150px', marginBottom: '10px' }}>Bearbeiten</Button>
-          <Link to="/" className='btn' variant="primary" style={{ height: '5vh', width: '30%', maxWidth: '300px', minWidth: '150px' }}>Zurück</Link>
+          <Link to="/dashboard" className='btn' variant="primary" style={{ height: '5vh', width: '30%', maxWidth: '300px', minWidth: '150px' }}>Zurück</Link>
         </form>
       </div>
     </div>

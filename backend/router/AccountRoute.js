@@ -1,6 +1,5 @@
 import express from "express"
-//import { AllAccounts, createAccount, softDeleteAccount, updateAccount} from "../controller/MainController.js";
-import { AllAccounts, createAccount, softDeleteAccount, updateAccount } from "../controller/MainController.js";
+import { AllAccounts, accountLogin, authorize, createAccount, softDeleteAccount, updateAccount } from "../controller/MainController.js";
 import { accountUpdateValidator, accountValidator, validateRequest } from "../middlewares/validator/accountValidator.js";
 
 const router = express.Router();
@@ -11,10 +10,12 @@ router.route("/")
 router.route("/create")
     .post(accountValidator, validateRequest, createAccount);
 
-router.route("/update")
+router.route("/login").post(accountLogin)
+
+router.route(authorize(["Admin"]), "/update")
     .patch(accountUpdateValidator(["firstname", "lastname", "email", "password", "budget"]), validateRequest, updateAccount);
 
-router.route("/soft-delete")
+router.route(authorize(["Admin"]), "/soft-delete")
     .delete(softDeleteAccount);
 
 export default router;

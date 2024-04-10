@@ -45,8 +45,10 @@ export const AllCategorys = async (req, res, next) => {
 // Create Section
 export const createCustomer = async (req, res, next) => {
   try {
+
     req.body.password = await hashPassword(req.body.password)
     const newCustomer = await Customer.create(req.body)
+
     
     await Account.updateMany(
       {_id: newCustomer.account},
@@ -509,7 +511,7 @@ export const isLoggedIn = async (req, res, next) => {
   if (!cookie) {
     const error = new Error("Cookie not found!")
     error.statusCode = 404;
-    next(error)
+   return next(error)
   }
   return res.status(200).send({ message: "Cookie sent" });
 };

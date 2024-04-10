@@ -1,5 +1,5 @@
 import express from "express"
-import { AllCustomers, createCustomer, softDeleteCustomer, updateCustomer } from "../controller/MainController.js";
+import { AllCustomers, authorize, createCustomer, softDeleteCustomer, updateCustomer } from "../controller/MainController.js";
 import { customerValidator, customerUpdateValidator, validateRequest } from "../middlewares/validator/customerValidator.js";
 const router = express.Router()
 
@@ -13,11 +13,11 @@ router
 .post(customerValidator, validateRequest, createCustomer)
 
 router
-.route("/update")
-.patch(customerUpdateValidator, validateRequest, updateCustomer)
+.route(authorize(["User"]),"/update")
+.patch(customerUpdateValidator(["firstname", "lastname", "email", "password"]), validateRequest, updateCustomer)
 
 router
-.route("/soft-delete")
+.route(authorize(["Admin", "User"]), "/soft-delete")
 .delete(softDeleteCustomer)
 
 export default router;

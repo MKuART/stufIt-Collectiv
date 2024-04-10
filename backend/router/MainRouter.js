@@ -3,20 +3,28 @@ import CustomerRoute from "./CustomerRoute.js"
 import AccountRoute from "./AccountRoute.js"
 import ExpensesRoute from "./ExpensesRoute.js"
 import CategoryRoute from "./CategoryRoute.js"
-//import { authorize } from "../controller/MainController.js"
+
+import { authorize, isLoggedIn } from "../controller/MainController.js"
+
 
 const router = express.Router()
 
 router
-.use("/customer",/* authorize(["User, Admin"]),*/ CustomerRoute)
+
+.use("/customer", CustomerRoute)
 
 router
-.use("/account",/* authorize(["Admin"]),*/ AccountRoute)
+.use("/account", AccountRoute)
 
 router
-.use("/expenses",/* authorize(["User", "Admin"]),*/ ExpensesRoute)
+.use("/expenses", authorize(["Admin"]),ExpensesRoute)
 
 router
-.use("/category",/* authorize(["Admin"]),*/ CategoryRoute)
+.use("/category", authorize(["Admin", "User"]),CategoryRoute)
+
+router
+.route("/check-cookie")
+.get(isLoggedIn)
+
 
 export default router;
