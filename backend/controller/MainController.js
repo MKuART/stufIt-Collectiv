@@ -338,10 +338,11 @@ export const softDeleteCustomer = async(req, res, next) => {
 export const softDeleteCategory = async(req, res, next) => {
   try{
     const foundUser = await Category.findById(req.body._id)
+    console.log(foundUser)
     if(!foundUser){
       const error = new Error("No category to delete!")
-    error.statusCode = 404;
-    next(error)
+      error.statusCode = 404;
+      next(error)
     }
 
     if(foundUser.deleted === "true"){
@@ -419,6 +420,23 @@ export const hardDeleteCustomer = async(req, res, next) => {
       sameSite: "none",
     secure: true
     }).status(200).json({message: "Account deleted!", deletedUser: deletedAccount})
+  }catch(error){
+    next(error)
+  }
+}
+export const hardDeleteCategory = async(req, res, next) => {
+  try{
+   const deletedCategory = await Category.findByIdAndDelete(req.body._id)
+   if(!deletedCategory){
+    const error = new Error("No category to delete!")
+    error.statusCode = 404;
+    next(error)
+   }
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "none",
+    secure: true
+    }).status(200).json({message: "Category deleted!", deletedCategory: deletedCategory})
   }catch(error){
     next(error)
   }
