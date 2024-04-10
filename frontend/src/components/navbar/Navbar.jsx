@@ -9,18 +9,11 @@ import Registry from '../registry/Registry.jsx';
 import Gast from '../gast/Gast.jsx';
 import Navbar from 'react-bootstrap/Navbar';
 import Logo from './logo/Logo.jsx'
+import GoToStart from '../testCookie/goToStart.jsx';
 
 function NavbarCompo() {
     const [userId, setUserId] = useState(null);
-    const navigate = useNavigate();
     const [showDropdown, setShowDropdown] = useState(false);
-
-
-    const handleLogin = () => {
-        const defaultUserId = '123';
-        setUserId(defaultUserId);
-        navigate('/profile'); 
-    };
 
     const handleLogout = () => {
         setUserId(null);
@@ -33,14 +26,12 @@ function NavbarCompo() {
 
     return (
         <>
+        <GoToStart />
             <Navbar 
                 expand="lg" className=" nav-container" 
             >
                 <Logo></Logo>
 
-                <button onClick={userId ? handleLogout : handleLogin}>
-                    {userId ? 'Logout' : 'Login'}
-                </button>
 
                 <div
                     onClick={ toggleDropdown } 
@@ -91,9 +82,9 @@ function NavbarCompo() {
                 </div>
             </Navbar>
             <Routes>
-                <Route path="/login" element={<Login onLogin={handleLogin} />} />
-                <Route path="/registry" element={<Registry onLogin={handleLogin} />} />
-                <Route path="/gast" element={<Gast onLogin={handleLogin} />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/registry" element={<Registry />} />
+                <Route path="/gast" element={<Gast />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/" element={<Join />} />
