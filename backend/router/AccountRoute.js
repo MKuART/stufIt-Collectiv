@@ -1,10 +1,7 @@
-
 import express from "express"
-import { AllAccounts, createAccount, softDeleteAccount, updateAccount} from "../controller/MainController.js";
-import express from "express";
+//import { AllAccounts, createAccount, softDeleteAccount, updateAccount} from "../controller/MainController.js";
 import { AllAccounts, createAccount, softDeleteAccount, updateAccount } from "../controller/MainController.js";
 import { accountUpdateValidator, accountValidator, validateRequest } from "../middlewares/validator/accountValidator.js";
-
 
 const router = express.Router();
 

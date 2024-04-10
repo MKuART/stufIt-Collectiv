@@ -6,7 +6,6 @@ import { comparePassword, hashPassword } from "../middlewares/password/hashPassw
 import { issueJwt } from "../helpers/jwt.js"
 
 // To get all Models
-
 export const AllCustomers = async (req, res, next) => {
   try {
     res.status(200).json(await Customer.find());
@@ -44,30 +43,17 @@ export const AllCategorys = async (req, res, next) => {
 };
 
 // Create Section
-
 export const createCustomer = async (req, res, next) => {
   try {
-    
-      const newCustomer = await Customer.create({
-
     req.body.password = await hashPassword(req.body.password)
-    res.status(200).json(
-      await Customer.create({
-
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        email: req.body.email,
-        password: req.body.password,
-        account: req.body.account
-      })
+    const newCustomer = await Customer.create(req.body)
     
-      await Account.updateMany(
-
+    await Account.updateMany(
       {_id: newCustomer.account},
       {$push: {customer: newCustomer._id}}
-      );
+    );
 
-      res.status(200).json(newCustomer);
+    res.status(200).json(newCustomer);
   } catch (error) {
     error.status = 404;
     next(error);
@@ -77,52 +63,44 @@ export const createCustomer = async (req, res, next) => {
 export const createAccount = async (req, res, next) => {
   try {
     req.body.password = await hashPassword(req.body.password)
-    res.status(200).json(
-
-      await Account.create(req.body)
-    );
+    res.status(200).json(await Account.create(req.body));
   } catch (error) {
     error.status = 404;
     next(error);
   }
 };
-/*
-export const createExpenses = async (req, res, next) => {
-  try {
-    res.status(200).json(
-      await Expenses.create({
-        description: req.body.description,
-        cost: req.body.cost,
-      })
-    );
-  } catch (error) {
-    error.status = 404;
-    next(error);
-  }
-};
-*/
-export const createExpenses = async (req, res, next) => {
-  try {
-    
-      const newExpense = await Expenses.create({
-        description: req.body.description,
-        cost: req.body.cost,
-        account: req.body.account,
-        category: req.body.category
-      });
 
+export const createExpenses = async (req, res, next) => {
+  try {
+    const newExpense = await Expenses.create(req.body);
     if (!newExpense){
-      throw new Error(`Ausgabe konnte nicht erstellt werden.`);
+      throw new Error(`Ausgabe konnte nicht erstellt werden.`)}
+
+    const category = await Category.findById(req.body.category);
+    if (!category){
+      throw new Error(`Kategorie nicht gefunden.`)
+    }
+  
+    if (req.body.cost > category.limitedBudget){
+      throw new Error(`Nicht genügend Budget vorhanden, Ausgabe zu hoch.`)
     }
 
     await Category.updateMany(
-
       {_id: newExpense.category},
       {$inc: {limitedBudget: -newExpense.cost}}
-      );
-      
+    );
 
-      res.status(200).json(newExpense)
+    await Category.updateMany(
+      {_id: newExpense.category},
+      {$push: {expense: newExpense._id}}
+    );
+
+    await Account.updateMany(
+      {_id: newExpense.account},
+      {$push: {expense: newExpense._id}}
+    );
+      
+    res.status(200).json(newExpense)
   } catch (error) {
     error.status = 404;
     next(error);
@@ -130,32 +108,31 @@ export const createExpenses = async (req, res, next) => {
 };
 
 export const createCategory = async (req, res, next) => {
-  try {
-    
-      const newCategory = await Category.create({
-        name: req.body.name,
-        limitedBudget: req.body.limitedBudget,
-        account: req.body.account,
-        expense: req.body.expense
-      });
-
+  try { 
+    const newCategory = await Category.create(req.body);
     if (!newCategory){
-      throw new Error(`Kategorie konnte nicht erstellt werden.`);
+      throw new Error(`Kategorie konnte nicht erstellt werden.`)}
+    
+    const account = await Account.findById(req.body.account);
+    if (!account){
+      throw new Error(`Account nicht gefunden.`)
+    }
+
+    if (req.body.limitedBudget > account.budget){
+      throw new Error(`Nicht genügend Budget vorhanden, minimiere den eingegeben Wert.`)
     }
 
     await Account.updateMany(
-
       {_id: newCategory.account},
       {$inc: {budget: -newCategory.limitedBudget}}
     );
     
     await Account.updateMany(
-
       {_id: newCategory.account},
       {$push: {category: newCategory._id}}
-      );
+    );
 
-      res.status(200).json(newCategory)
+    res.status(200).json(newCategory)
   } catch (error) {
     error.status = 404;
     next(error);
@@ -251,46 +228,6 @@ export const updateAccount = async (req, res, next) => {
   }
 }
 
-
-
-/* Michas Code
-export const updateAccount = async (req, res, next) => {
-  try {
-    const foundUser = await Account.findByIdAndUpdate(req.params.id);
-
-    if (!foundUser) {
-      const error = new Error("Account not found!")
-      error.statusCode = 404;
-      throw error;
-    }
-
-    if (req.body.firstname) {
-      foundUser.firstname = req.body.firstname;
-    }
-    if (req.body.lastname) {
-      foundUser.lastname = req.body.lastname;
-    }
-    if (req.body.email) {
-      foundUser.email = req.body.email;
-    }
-    if (req.body.password) {
-      req.body.password = await hashPassword(req.body.password)
-      foundUser.password = req.body.password;
-    }
-    if (req.body.budget) {
-      foundUser.budget = req.body.budget;
-    }
-
-    await Account.updateMany(foundUser);
-
-    res.status(200).json({ message: "Account successfully updated!", updatedUser: foundUser });
-  } catch (error) {
-    next(error);
-  }
-};
-*/
-
-
 export const updateCategory = async (req, res, next) => {
   try{
     const foundCategory = await Category.findById(req.body._id)
@@ -344,7 +281,6 @@ export const updateExpenses = async (req, res, next) => {
 }
 
 // Soft-Delete
-
 export const softDeleteAccount = async(req, res, next) => {
   try{
     const foundUser = await Account.findById(req.body._id)
@@ -450,7 +386,6 @@ export const softDeleteExpenses = async(req, res, next) => {
 }
 
 // Hard-delete
-
 export const hardDeleteAccount = async(req, res, next) => {
   try{
    const deletedAccount = await Account.findByIdAndDelete(req.body._id)
@@ -490,7 +425,6 @@ export const hardDeleteCustomer = async(req, res, next) => {
 // Hard-delete
 
 // Log-In
-
 export const accountLogin = async(req, res, next) => {
   try{
     const {email, password} = req.body;

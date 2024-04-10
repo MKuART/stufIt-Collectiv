@@ -12,7 +12,7 @@ const ExpensesSchema = new Schema(
   { versionKey: false, strictQuery: true }
 );
 
-export default model("Expense", ExpensesSchema, "expenses");
+export default model("Expense", ExpensesSchema, "Expenses");
 
 /* 
 customer: "John Mustermann",
