@@ -31,7 +31,7 @@ function Login() {
       });
 
       if (response.ok) {
-        Navigate("/profile");
+        Navigate("/dashboard")
         console.log('Erfolgreich eingeloggt');
       } else {
         alert(`${isLoggedIn ? "Admin" : "User"} not found`);
