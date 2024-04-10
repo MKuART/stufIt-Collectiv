@@ -2,8 +2,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
 
-const URIAccount = `http://localhost:1412/account/login`;
-const URICustomer = `http://localhost:1412/customer/login`;
+const URIAccount = `http://localhost:2222/account/login`;
+const URICustomer = `http://localhost:2222/customer/login`;
 
 function Login() {
   const Navigate = useNavigate();

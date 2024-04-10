@@ -1,5 +1,5 @@
 import express from "express"
-import { AllCategorys, createCategory, softDeleteCategory, updateCategory } from "../controller/MainController.js";
+import { AllCategorys, createCategory, hardDeleteCategory, softDeleteCategory, updateCategory } from "../controller/MainController.js";
 
 const router = express.Router()
 
@@ -16,7 +16,7 @@ router
 .patch(updateCategory)
 
 router
-.route("/soft-delete")
-.delete(softDeleteCategory)
+.route("/hard-delete")
+.delete(hardDeleteCategory)
 
 export default router;
