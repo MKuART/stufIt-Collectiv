@@ -4,6 +4,7 @@ import { Schema, model } from "mongoose";
 const Category = new Schema(
   {
     name: {type: String, default: "N/A"},
+    icon: {type: String, required: true },
     limitedBudget: {type: Number, default: 0},
     account: [{ type: Schema.Types.ObjectId, ref: "Account"}],
     expense: [{type: Schema.Types.ObjectId, ref: "Expenses"}]
