@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const GoToStart = () => {
+const TestCookie = () => {
   const navigate = useNavigate();
+
   useEffect(() => {
     const checkCookie = async () => {
       try {
@@ -13,10 +14,14 @@ const GoToStart = () => {
             'Content-Type': 'application/json',
           }
         });
+
+        console.log(response);
+
         if (response.ok) {
-          navigate("/dashboard")
+          navigate("/dashboard");
+          console.log('Erfolgreich eingeloggt');
         } else {
-          navigate(`/`);
+          navigate("/");
           console.error('Fehler beim Einloggen:', response.statusText);
         }
       } catch (error) {
@@ -30,4 +35,4 @@ const GoToStart = () => {
   return null; 
 };
 
-export default GoToStart;
+export default TestCookie;

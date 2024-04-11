@@ -4,8 +4,8 @@ import { useContext, useEffect, useState } from "react";
 import UserData from "../Context/UserData";
 import Role from "../Context/Role";
 
-const URIAccount = `http://localhost:1412/account/login`;
-const URICustomer = `http://localhost:1412/customer/login`;
+const URIAccount = `http://localhost:2222/account/login`;
+const URICustomer = `http://localhost:2222/customer/login`;
 
 function Login() {
   const Navigate = useNavigate();
