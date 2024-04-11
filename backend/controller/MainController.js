@@ -166,12 +166,14 @@ export const findAccount = async (req, res, next) => {
 
 export const findCategory = async (req, res, next) => {
   try {
-    
-    res.status(200).json(await Category.findById(req.body.id, {deleted: false}));
+    const categoryIds = req.body; 
+    const foundCategories = await Category.find({ _id: { $in: categoryIds }, deleted: false });
+    res.status(200).json({ foundCategories });
   } catch (error) {
     next(error);
   }
 };
+
 
 export const findExpenses = async (req, res, next) => {
   try {
@@ -576,15 +578,17 @@ export const getExpensesData = async (req, res, next) => {
 
 export const authorize = (roles = []) => {
   return (req, res, next) => {
-    const token = req.headers["authorization"];
+    const role = req.headers["authorization"]
+    
+    const token = req.cookies.jwt;
     if (!token) {
       return res.status(401).send("Access denied. No token provided.");
     }
-    console.log(token);
-    console.log(secretKey);
     jwt.verify(token, secretKey, (error, decoded) => {
-      if (error) return res.status(401).send("Invalid token.");
+      if (error) return res.status(401).json({error: "Invalid token."});
       
+      if(!roles.includes(role)) return res.status(404).json({error: "Wrong role"});
+
       req.user = decoded;
       next();
     });

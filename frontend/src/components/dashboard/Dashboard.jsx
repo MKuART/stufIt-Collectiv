@@ -11,11 +11,9 @@ function Dashboard() {
   const { userData, setUserData } = useContext(UserData)
 
  useEffect(() => {
-  
-  async function fetchCategories(categoryIds) {
+  setTimeout(() => {
+  async function fetchCategories() {
     try {
-      console.log(userData.category);
-      
       const response = await fetch(URICategory, {
         method: "POST",
         headers: {
@@ -24,19 +22,22 @@ function Dashboard() {
         },
         body: JSON.stringify(userData.category),
         credentials: "include"
-      });
+      })
+      
       if (!response.ok) {
         console.error("Error fetching category data:", response.statusText);
-       } else {
-      //   const data = await response.json();
-      //   const filteredCategories = data.filter(category => categoryIds.includes(category._id));
-      //   setCategories(filteredCategories);
+       } else { 
+      const data = await response.json()
+      setCategories(data.foundCategories);
+        console.log("Erfolgreich", response.statusText);
       }
     } catch (error) {
       console.log(`Error: ${error}`);
     }
   }  
 
+  fetchCategories()
+}, 2000);
   async function fetchAccount() {
     try {
       const response = await fetch(URIAccount, {
@@ -50,10 +51,7 @@ function Dashboard() {
       if (!response.ok) {
         console.error("Error fetching account data:", response.statusText);
       } else {
-        const data = await response.json();
-        const account = data[0];
-        setAccount(account);
-        fetchCategories(account.category);
+        console.log("Succsessful:", response.statusText);
       }
     } catch (error) {
       console.log(`Error: ${error}`);
@@ -63,11 +61,10 @@ function Dashboard() {
 fetchAccount()
 
 },[userData])
-console.log(userData);
 
   return (
     <>
-   {userData? userData.firstname :  <p>Loading...</p>}
+    {categories ? categories.map((element, index) => <div key={index}><p>{element.name}</p><p>{element.limitedBudget}</p></div>) : <p>Loading...</p>}
     </>
   );
 }
