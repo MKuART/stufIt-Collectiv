@@ -1,85 +1,96 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Legend from "./legend/Legend.jsx";
+import UserData from "../Context/UserData.jsx";
 
-const URIAccount = "http://localhost:2222/account";
-const URICategory = "http://localhost:2222/category";
+const URIAccount = "http://localhost:1412/account";
+const URICategory = "http://localhost:1412/category/findById";
 
 function Dashboard() {
   const [account, setAccount] = useState(null);
   const [categories, setCategories] = useState([]);
+  const { userData, setUserData } = useContext(UserData)
   const [deleteMode, setDeleteMode] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryBudget, setNewCategoryBudget] = useState(0);
 
+ 
+  async function fetchCategories() {
+    try {
+      const response = await fetch(URICategory, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": userData.role,
+        },
+        body: JSON.stringify(userData.category),
+        credentials: "include"
+      })
+      
+      if (!response.ok) {
+        console.error("Error fetching category data:", response.statusText);
+       } else { 
+      const data = await response.json()
+      setCategories(data.foundCategories);
+        console.log("Erfolgreich", response.statusText);
+      }
+    } catch (error) {
+      console.log(`Error: ${error}`);
+    }
+  }  
+
+  fetchCategories()
+
+  
   async function fetchAccount() {
     try {
       const response = await fetch(URIAccount, {
-        method: "GET",
+        method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": userData.role,
         },
         credentials: "include"
       });
       if (!response.ok) {
         console.error("Error fetching account data:", response.statusText);
       } else {
-        const data = await response.json();
-        const account = data[0];
-        setAccount(account);
-        fetchCategories(account.category);
+        console.log("Succsessful:", response.statusText);
       }
     } catch (error) {
       console.log(`Error: ${error}`);
     }
   }
+ 
+fetchAccount()
 
-  async function fetchCategories(accountId) {
-    try {
-      const response = await fetch(`${URICategory}?account_id=${accountId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include"
-      });
-      if (!response.ok) {
-        console.error("Error fetching category data:", response.statusText);
-      } else {
-        const data = await response.json();
-        setCategories(data);
-      }
-    } catch (error) {
-      console.log(`Error: ${error}`);
+
+const createCategory = async () => {
+  try {
+    const response = await fetch(`${URICategory}/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        name: newCategoryName,
+        budget: newCategoryBudget,
+        account: account._id
+      })
+    });
+    if (!response.ok) {
+      console.error("Error creating category:", response.statusText);
+    } else {
+      setNewCategoryName("");
+      setNewCategoryBudget(0);
+      fetchCategories(account._id); 
     }
+  } catch (error) {
+    console.log(`Error: ${error}`);
   }
-  
-  const createCategory = async () => {
-    try {
-      const response = await fetch(`${URICategory}/create`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          name: newCategoryName,
-          budget: newCategoryBudget,
-          account: account._id
-        })
-      });
-      if (!response.ok) {
-        console.error("Error creating category:", response.statusText);
-      } else {
-        setNewCategoryName("");
-        setNewCategoryBudget(0);
-        fetchCategories(account._id); 
-      }
-    } catch (error) {
-      console.log(`Error: ${error}`);
-    }
-  };
-  
-  const deleteCategory = async (categoryId) => {
+};
+
+const deleteCategory = async (categoryId) => {
     try {
       const response = await fetch(`${URICategory}/hard-delete`, {
         method: "DELETE",
@@ -102,10 +113,6 @@ function Dashboard() {
   const handleDeleteClick = (categoryId) => {
     deleteCategory(categoryId);
   };
-
-  useEffect(() => {
-    fetchAccount();
-  }, []);
 
   return (
     <div>

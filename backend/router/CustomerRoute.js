@@ -13,11 +13,11 @@ router
 .post(customerValidator, validateRequest, createCustomer)
 
 router
-.route(/* authorize(["User"]), */"/update")
+.route("/update", authorize(["User"]))
 .patch(customerUpdateValidator(["firstname", "lastname", "email", "password"]), validateRequest, updateCustomer)
 
 router
-.route(/* authorize(["Admin", "User"]), */ "/soft-delete")
+.route("/soft-delete", authorize(["Admin", "User"]))
 .delete(softDeleteCustomer)
 
 export default router;

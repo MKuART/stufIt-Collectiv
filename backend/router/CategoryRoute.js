@@ -1,11 +1,15 @@
 import express from "express"
-import { AllCategorys, createCategory, hardDeleteCategory, softDeleteCategory, updateCategory } from "../controller/MainController.js";
+import { AllCategorys, authorize, createCategory, findCategory, softDeleteCategory, updateCategory } from "../controller/MainController.js";
 
 const router = express.Router()
 
 router
 .route("/")
-.get(AllCategorys)
+.post(AllCategorys)
+
+router
+.route("/findById")
+.post(findCategory)
 
 router
 .route("/create")
