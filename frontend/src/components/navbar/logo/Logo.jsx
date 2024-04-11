@@ -4,14 +4,15 @@ function Logo () {
   return (
     <div className='logo-container'>
         <div className='cards-container'>
-            <div className='card a-card'></div>
-            <div className='card b-card'></div>
-            <div className='card c-card'>0930934827349</div>
-            <div className='card d-card'></div>
-            <div className='card f-card'></div>
-            <div className='card g-card'></div>
+            <div className='card money a-card'></div>
+            <div className='card money b-card'></div>
+            <div className='card money c-card'></div>
+            <div className='card bag d-card'></div>
+            <div className='card bag f-card'></div>
+            <div className='card bag g-card'></div>
         </div>
-        <h2 className='logo-text'>Stuffit</h2>
+        <h2 className='logo-text'>S</h2>
+        <h2 className='exclamation'>!</h2>
     </div>
   )
 }
