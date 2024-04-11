@@ -1,9 +1,13 @@
+import "dotenv/config.js"
 import Account from "../models/Account.js";
 import Customer from "../models/Customer.js";
 import Expenses from "../models/Expenses.js";
 import Category from "../models/Category.js";
 import { comparePassword, hashPassword } from "../middlewares/password/hashPassword.js";
 import { issueJwt } from "../helpers/jwt.js"
+import jwt from "jsonwebtoken"
+
+const secretKey = process.env.JWT_SECRET
 
 // To get all Models
 export const AllCustomers = async (req, res, next) => {
@@ -110,7 +114,9 @@ export const createExpenses = async (req, res, next) => {
 };
 
 export const createCategory = async (req, res, next) => {
+  console.log(req.body);
   try { 
+    
     const newCategory = await Category.create(req.body);
     if (!newCategory){
       throw new Error(`Kategorie konnte nicht erstellt werden.`)}
@@ -136,7 +142,7 @@ export const createCategory = async (req, res, next) => {
 
     res.status(200).json(newCategory)
   } catch (error) {
-    error.status = 404;
+    error.statusCode = 404;
     next(error);
   }
 };
@@ -160,6 +166,7 @@ export const findAccount = async (req, res, next) => {
 
 export const findCategory = async (req, res, next) => {
   try {
+    
     res.status(200).json(await Category.findById(req.body.id, {deleted: false}));
   } catch (error) {
     next(error);
@@ -449,7 +456,7 @@ export const accountLogin = async(req, res, next) => {
       sameSite: "none",
       secure: true
     })
-    res.status(200).json({ message: "Login successful!"})
+    res.status(200).json({token, searchEmail})
   }catch(error){
     next(error)
   }
@@ -477,7 +484,7 @@ export const customerLogin = async(req, res, next) => {
       sameSite: "none",
       secure: true
     })
-    res.status(200).json({ message: "Login successful!"})
+    res.status(200).json({ message: "Login successful!", token})
   }catch(error){
     next(error)
   }
@@ -521,10 +528,29 @@ export const isLoggedIn = async (req, res, next) => {
 // Data
 
 export const getAccountData = async (req, res, next) => {
-  const userId = req.user.id;
-  const search = await Account.findOne({ _id: userId });
-  res.status(200).send({ search });
+  console.log("test");
+  try {
+    const token = req.cookies.jwt;
+    if (!token) {
+      const error = new Error('Token not found');
+      error.statusCode = 401; 
+      throw error;
+    }
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken.id;
+    const account = await Account.findOne({ _id: userId });
+    if (!account) {
+      const error = new Error('Account not found');
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json({ account });
+  } catch (error) {
+    next(error);
+  }
 };
+
+
 
 export const getCustomerData = async (req, res, next) => {
   const userId = req.user.id;
@@ -551,17 +577,13 @@ export const getExpensesData = async (req, res, next) => {
 export const authorize = (roles = []) => {
   return (req, res, next) => {
     const token = req.headers["authorization"];
-
     if (!token) {
       return res.status(401).send("Access denied. No token provided.");
     }
-
+    console.log(token);
+    console.log(secretKey);
     jwt.verify(token, secretKey, (error, decoded) => {
       if (error) return res.status(401).send("Invalid token.");
-
-      if (!roles.includes(decoded.role)) {
-        return res.status(403).json({ message: "Unauthorized" });
-      }
       
       req.user = decoded;
       next();

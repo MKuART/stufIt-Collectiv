@@ -13,12 +13,8 @@ const GoToStart = () => {
             'Content-Type': 'application/json',
           }
         });
-
-        console.log(response);
-
         if (response.ok) {
           navigate("/dashboard")
-          console.log('Erfolgreich eingeloggt');
         } else {
           navigate(`/`);
           console.error('Fehler beim Einloggen:', response.statusText);
