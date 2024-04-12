@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Legend from "./legend/Legend.jsx";
 
-const URIAccount = "http://localhost:2222/account";
-const URICategory = "http://localhost:2222/category";
+const URIAccount = "http://localhost:1305/account";
+const URICategory = "http://localhost:1305/category";
 
 function Dashboard() {
   const [account, setAccount] = useState(null);

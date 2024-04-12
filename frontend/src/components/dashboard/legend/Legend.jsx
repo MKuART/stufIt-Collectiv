@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const URIAccount = "http://localhost:2222/account";
+const URIAccount = "http://localhost:1305/account";
 
 function Legend() {
   const [account, setAccount] = useState(null);

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
-const URI = `http://localhost:1412/account/create`
+const URI = `http://localhost:1305/account/create`
 
 function Registry() {
 const Navigate = useNavigate("")
