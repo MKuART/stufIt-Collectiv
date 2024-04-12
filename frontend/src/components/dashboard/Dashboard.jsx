@@ -25,14 +25,13 @@ function Dashboard() {
         body: JSON.stringify(userData.category),
         credentials: "include",
       });
+      const data = await response.json();
+      setCategories(data);
+      console.log(data);
 
       if (!response.ok) {
         console.error("Error fetching category data:", response.statusText);
       } else {
-        const data = await response.json();
-        setCategories(data.foundCategories);
-        console.log(categories);
-        
         console.log("Erfolgreich", response.statusText);
       }
     } catch (error) {
@@ -118,47 +117,85 @@ function Dashboard() {
   }, []);
 
   return (
+    <div
+      className="dashboard-container"
+      style={{ height: "600px", marginTop: "150px", position: "relative" }}
+    >
+      <div className="name-container" style={{}}>
+        {<Legend categories={categories} />}
+      </div>
+      <div className="cotegory-container" style={{}}>
+        {categories ? (
+          categories.map((category) => (
+            <div
+              className="div-container"
+              key={category._id}
+              style={{ textAlign: "center" }}
+            >
+              {category.name}
 
-    <div className="dashboard-container" style={{  height: '600px', marginTop: '150px', position: 'relative' }}>
-      <div className="name-container" style={{}}>{ <Legend categories={categories}/>}</div>
-    <div className="cotegory-container" style={{ }}>
-      {categories.map(category => (
-        <div className="div-container" key={category._id} style={{textAlign:'center' }}>
-          {category.name}
-        
-          {deleteMode && (
-            <div className="deleteIcon" onClick={() => handleDeleteClick(category._id)}>X</div>
-          )}
-        </div>
-      ))}
+              {deleteMode && (
+                <div
+                  className="deleteIcon"
+                  onClick={() => handleDeleteClick(category._id)}
+                >
+                  X
+                </div>
+              )}
+            </div>
+          ))
+        ) : (
+          <p>Loading...</p>
+        )}
+      </div>
+      <div
+        className="join-container"
+        style={{
+          height: "200px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          top: "52vh",
+          right: "2vh",
+          left: "2vh",
+        }}
+      >
+        {!creatingCategory && ( // Nur anzeigen, wenn keine Kategorie erstellt wird
+          <button className="btn" onClick={() => setCreatingCategory(true)}>
+            Kategorie erstellen
+          </button>
+        )}
+        {creatingCategory && ( // Zeige die Eingabefelder nur an, wenn eine Kategorie erstellt wird
+          <>
+            <input
+              type="text"
+              placeholder="Kategoriename"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+            />
+            <input
+              style={{ margin: "5px" }}
+              type="number"
+              placeholder="Budget"
+              value={newCategoryBudget}
+              onChange={(e) => setNewCategoryBudget(parseFloat(e.target.value))}
+            />
+            <button className="btn" onClick={createCategory}>
+              Kategorie erstellen
+            </button>
+          </>
+        )}
+        <button
+          className="btn"
+          style={{ margin: "5px" }}
+          onClick={() => setDeleteMode(!deleteMode)}
+        >
+          {deleteMode ? "Löschen beenden" : "Kategorie löschen"}
+        </button>
+      </div>
     </div>
-    <div className='join-container' style={{  height: '200px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'absolute', top:'52vh', right: '2vh', left: '2vh'}}>
-      {!creatingCategory && ( // Nur anzeigen, wenn keine Kategorie erstellt wird
-        <button className="btn" onClick={() => setCreatingCategory(true)}>Kategorie erstellen</button>
-      )}
-      {creatingCategory && ( // Zeige die Eingabefelder nur an, wenn eine Kategorie erstellt wird
-        <>
-          <input
-            type="text"
-            placeholder="Kategoriename"
-            value={newCategoryName}
-            onChange={(e) => setNewCategoryName(e.target.value)}
-          />
-          <input style={{margin:'5px'}}
-            type="number"
-            placeholder="Budget"
-            value={newCategoryBudget}
-            onChange={(e) => setNewCategoryBudget(parseFloat(e.target.value))}
-          />
-          <button className="btn" onClick={createCategory}>Kategorie erstellen</button>
-        </>
-      )}
-      <button 
-        className="btn" style={{margin:'5px'}} onClick={() => setDeleteMode(!deleteMode)}>
-        {deleteMode ? "Löschen beenden" : "Kategorie löschen"}
-      </button>
-    </div>
-  </div>
   );
 }
 

@@ -16,7 +16,7 @@ Customer.methods.toJSON = function() {
     const customer = this.toObject();
     delete customer.password;
     delete customer._id;
-    delete customer.role
+    // delete customer.role
     return customer;
   }
 

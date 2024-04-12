@@ -434,9 +434,11 @@ export const hardDeleteCustomer = async(req, res, next) => {
   }
 }
 export const hardDeleteCategory = async(req, res, next) => {
+  console.log("test");
   try{
    const deletedCategory = await Category.findByIdAndDelete(req.body._id)
    if(!deletedCategory){
+    console.log(deletedCategory);
     const error = new Error("No category to delete!")
     error.statusCode = 404;
     next(error)
