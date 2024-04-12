@@ -4,7 +4,7 @@ import AccountRoute from "./AccountRoute.js"
 import ExpensesRoute from "./ExpensesRoute.js"
 import CategoryRoute from "./CategoryRoute.js"
 
-import { authorize, isLoggedIn } from "../controller/MainController.js"
+import { authorize, isLoggedIn, logout } from "../controller/MainController.js"
 
 
 const router = express.Router()
@@ -17,14 +17,17 @@ router
 .use("/account", AccountRoute)
 
 router
-.use("/expenses", authorize(["Admin"]),ExpensesRoute)
+.use("/expenses",authorize(["Admin", "User"]), ExpensesRoute)
 
 router
-.use("/category", authorize(["Admin", "User"]),CategoryRoute)
+.use("/category",authorize(["Admin"]) ,CategoryRoute)
 
 router
 .route("/check-cookie")
 .get(isLoggedIn)
 
+router
+.route("/logout")
+.post(logout)
 
 export default router;

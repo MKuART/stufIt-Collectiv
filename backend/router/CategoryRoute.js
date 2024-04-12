@@ -1,11 +1,15 @@
 import express from "express"
-import { AllCategorys, createCategory, softDeleteCategory, updateCategory } from "../controller/MainController.js";
+import { AllCategorys, authorize, createCategory, findCategory, hardDeleteCategory, softDeleteCategory, updateCategory } from "../controller/MainController.js";
 
 const router = express.Router()
 
 router
 .route("/")
-.get(AllCategorys)
+.post(AllCategorys)
+
+router
+.route("/findById")
+.post(findCategory)
 
 router
 .route("/create")
@@ -16,7 +20,7 @@ router
 .patch(updateCategory)
 
 router
-.route("/soft-delete")
-.delete(softDeleteCategory)
+.route("/hard-delete")
+.delete(hardDeleteCategory)
 
 export default router;
