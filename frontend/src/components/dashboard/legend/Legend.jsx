@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 
-const URIAccount = "http://localhost:1412/account";
+
+const URIAccount = "http://localhost:1305/account";
+
 
 function Legend() {
   const [account, setAccount] = useState(null);
@@ -31,8 +33,8 @@ function Legend() {
 
   return (
     <div>
-      <div style={{ border: '1px solid red', height: '160px', width: '100vw'}}>
-        {account && account.firstname}
+      <div >
+        {account && account.firstname +" "+ account.lastname }
       </div>
     </div>
   )
