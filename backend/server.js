@@ -1,7 +1,7 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
-import 'dotenv/config';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 
@@ -15,7 +15,6 @@ const MONGO_DB_URI = process.env.MONGO_DB_URI || 'mongodb://localhost:27017';
 
 app.use(morgan(`dev`));
 app.use(cors({credentials: true, origin: "http://localhost:5173"}));
-
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

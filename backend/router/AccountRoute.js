@@ -1,21 +1,25 @@
 import express from "express"
-import { AllAccounts, accountLogin, createAccount, softDeleteAccount, updateAccount } from "../controller/MainController.js";
+import { AllAccounts, accountLogin, authorize, createAccount, getAccountData, softDeleteAccount, updateAccount } from "../controller/MainController.js";
 import { accountUpdateValidator, accountValidator, validateRequest } from "../middlewares/validator/accountValidator.js";
 
 const router = express.Router();
 
 router.route("/")
-    .get(AllAccounts);
+    .post(AllAccounts);
 
 router.route("/create")
     .post(accountValidator, validateRequest, createAccount);
 
 router.route("/login").post(accountLogin)
 
-router.route(/* authorize(["Admin"]), */ "/update")
+router.route("/update", authorize(["Admin"]))
     .patch(accountUpdateValidator(["firstname", "lastname", "email", "password", "budget"]), validateRequest, updateAccount);
 
-router.route(/* authorize(["Admin"]), */ "/soft-delete")
+router.route("/soft-delete", authorize(["Admin"]))
     .delete(softDeleteAccount);
+
+router
+.route("/get-data")
+.post(getAccountData)
 
 export default router;
