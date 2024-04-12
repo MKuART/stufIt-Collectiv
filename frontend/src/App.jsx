@@ -1,6 +1,7 @@
 import { RouterProvider } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
+import './components/dashboard/Dashboard.css'
 import { router } from './routes/router.jsx'
 import GoToStart from './components/testCookie/goToStart.jsx';
 
