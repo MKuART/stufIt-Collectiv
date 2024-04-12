@@ -12,4 +12,12 @@ const Customer = new Schema({
     deleted: {type: String, default: false}
 }, {versionKey: false, strictQuery: true})
 
+Customer.methods.toJSON = function() {
+    const customer = this.toObject();
+    delete customer.password;
+    delete customer._id;
+    delete customer.role
+    return customer;
+  }
+
 export default model("Customer", Customer, "Customers")
