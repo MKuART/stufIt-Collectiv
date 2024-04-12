@@ -6,7 +6,7 @@ const GoToStart = () => {
   useEffect(() => {
     const checkCookie = async () => {
       try {
-        const response = await fetch("http://localhost:2222/check-cookie", {
+        const response = await fetch("http://localhost:1305/check-cookie", {
           method: "GET",
           credentials: "include",
           headers: {
