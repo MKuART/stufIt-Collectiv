@@ -7,7 +7,9 @@ const TestCookie = () => {
   useEffect(() => {
     const checkCookie = async () => {
       try {
-        const response = await fetch("http://localhost:5000/check-cookie", {
+        
+        const response = await fetch("http://localhost:1305/check-cookie", {
+
           method: "GET",
           credentials: "include",
           headers: {

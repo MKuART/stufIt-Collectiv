@@ -3,7 +3,6 @@ import Button from 'react-bootstrap/Button';
 
 const URI = `http://localhost:1305/account/create`
 
-
 function Registry() {
 const Navigate = useNavigate("")
   const handleSubmit = async (e) => {

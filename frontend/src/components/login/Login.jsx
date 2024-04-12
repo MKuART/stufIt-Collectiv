@@ -7,7 +7,6 @@ import Role from "../Context/Role";
 const URIAccount = `http://localhost:1305/account/login`;
 const URICustomer = `http://localhost:1305/customer/login`;
 
-
 function Login() {
   const Navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(true);

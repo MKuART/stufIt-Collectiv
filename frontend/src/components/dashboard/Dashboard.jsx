@@ -3,7 +3,7 @@ import Legend from "./legend/Legend.jsx";
 import UserData from "../Context/UserData.jsx";
 
 const URIAccount = "http://localhost:1305/account";
-const URICategory = "http://localhost:1305/category/findById";
+const URICategory = "http://localhost:1305/category";
 
 function Dashboard() {
   const [account, setAccount] = useState(null);
