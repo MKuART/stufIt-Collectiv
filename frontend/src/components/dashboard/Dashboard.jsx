@@ -12,6 +12,7 @@ function Dashboard() {
   const [deleteMode, setDeleteMode] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryBudget, setNewCategoryBudget] = useState(0);
+  const [creatingCategory, setCreatingCategory] = useState(false); // Zustand für das Erstellen einer Kategorie
 
   async function fetchCategories() {
     try {
@@ -117,38 +118,47 @@ function Dashboard() {
   }, []);
 
   return (
-    <div>
-      Dashboard
-      <Legend categories={categories} />
-      <div style={{ border: "1px solid red", height: "400px", width: "100vw" }}>
-        {categories.map((category) => (
-          <div key={category._id}>
-            {category.name}
-            {deleteMode && (
-              <button onClick={() => handleDeleteClick(category._id)}>X</button>
-            )}
-          </div>
-        ))}
-      </div>
-      <div>
-        <input
-          type="text"
-          placeholder="Kategoriename"
-          value={newCategoryName}
-          onChange={(e) => setNewCategoryName(e.target.value)}
-        />
-        <input
-          type="number"
-          placeholder="Budget"
-          value={newCategoryBudget}
-          onChange={(e) => setNewCategoryBudget(e.target.value)}
-        />
-        <button onClick={createCategory}>Kategorie erstellen</button>
-      </div>
-      <button className="delete-btn" onClick={() => setDeleteMode(!deleteMode)}>
+
+    <div className="dashboard-container" style={{  height: '600px', marginTop: '150px', position: 'relative' }}>
+      <div className="name-container" style={{}}>{ <Legend categories={categories}/>}</div>
+    <div className="cotegory-container" style={{ }}>
+      {categories.map(category => (
+        <div className="div-container" key={category._id} style={{textAlign:'center' }}>
+          {category.name}
+        
+          {deleteMode && (
+            <div className="deleteIcon" onClick={() => handleDeleteClick(category._id)}>X</div>
+          )}
+        </div>
+      ))}
+    </div>
+    <div className='join-container' style={{  height: '200px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'absolute', top:'52vh', right: '2vh', left: '2vh'}}>
+      {!creatingCategory && ( // Nur anzeigen, wenn keine Kategorie erstellt wird
+        <button className="btn" onClick={() => setCreatingCategory(true)}>Kategorie erstellen</button>
+      )}
+      {creatingCategory && ( // Zeige die Eingabefelder nur an, wenn eine Kategorie erstellt wird
+        <>
+          <input
+            type="text"
+            placeholder="Kategoriename"
+            value={newCategoryName}
+            onChange={(e) => setNewCategoryName(e.target.value)}
+          />
+          <input style={{margin:'5px'}}
+            type="number"
+            placeholder="Budget"
+            value={newCategoryBudget}
+            onChange={(e) => setNewCategoryBudget(parseFloat(e.target.value))}
+          />
+          <button className="btn" onClick={createCategory}>Kategorie erstellen</button>
+        </>
+      )}
+      <button 
+        className="btn" style={{margin:'5px'}} onClick={() => setDeleteMode(!deleteMode)}>
         {deleteMode ? "Löschen beenden" : "Kategorie löschen"}
       </button>
     </div>
+  </div>
   );
 }
 
