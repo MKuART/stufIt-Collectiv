@@ -3,7 +3,7 @@ import Legend from "./legend/Legend.jsx";
 import UserData from "../Context/UserData.jsx";
 
 const URIAccount = "http://localhost:1305/account";
-const URICategory = "http://localhost:1305/category";
+const URICategory = "http://localhost:1305/category/findById";
 
 function Dashboard() {
   const [account, setAccount] = useState(null);
@@ -26,8 +26,8 @@ function Dashboard() {
         credentials: "include",
       });
       const data = await response.json();
-      setCategories(data);
-      console.log(data);
+      setCategories(data.foundCategories);
+      console.log(data.foundCategories);
 
       if (!response.ok) {
         console.error("Error fetching category data:", response.statusText);
