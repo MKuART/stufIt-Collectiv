@@ -14,7 +14,7 @@ const Customer = new Schema(
   { versionKey: false, strictQuery: true }
 );
 
-<<<<<<< HEAD
+
 Customer.methods.toJSON = function() {
     const customer = this.toObject();
     delete customer.password;
@@ -23,7 +23,6 @@ Customer.methods.toJSON = function() {
     return customer;
   }
 
-export default model("Customer", Customer, "Customers")
-=======
+
 export default model("Customer", Customer, "Customers");
->>>>>>> 4bd70fb (ok)
+
