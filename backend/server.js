@@ -17,6 +17,7 @@ const Frontport = process.env.Frontport || 3000
 app.use(morgan(`dev`));
 app.use(cors({credentials: true, origin: `http://localhost:${Frontport}`}));
 
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
