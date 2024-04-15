@@ -1,17 +1,20 @@
 import { Schema, model } from "mongoose";
 
-
-const Customer = new Schema({
-    firstname: {type: String, required: true},
-    lastname: {type: String, required: true},
-    email: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
-    account: [{type: Schema.Types.ObjectId, ref: "Account"}],
-    role: {type: String, enum: ["User", "Admin"], default: "User"},
+const Customer = new Schema(
+  {
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
     account: [{ type: Schema.Types.ObjectId, ref: "Account" }],
-    deleted: {type: String, default: false}
-}, {versionKey: false, strictQuery: true})
+    role: { type: String, enum: ["User", "Admin"], default: "User" },
+    account: [{ type: Schema.Types.ObjectId, ref: "Account" }],
+    deleted: { type: String, default: false },
+  },
+  { versionKey: false, strictQuery: true }
+);
 
+<<<<<<< HEAD
 Customer.methods.toJSON = function() {
     const customer = this.toObject();
     delete customer.password;
@@ -21,3 +24,6 @@ Customer.methods.toJSON = function() {
   }
 
 export default model("Customer", Customer, "Customers")
+=======
+export default model("Customer", Customer, "Customers");
+>>>>>>> 4bd70fb (ok)
