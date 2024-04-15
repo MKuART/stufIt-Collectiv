@@ -23,6 +23,4 @@ Customer.methods.toJSON = function() {
     return customer;
   }
 
-
-export default model("Customer", Customer, "Customers");
-
+export default model("Customer", Customer, "Customers")
