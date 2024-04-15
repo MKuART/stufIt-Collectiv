@@ -14,6 +14,7 @@ const Customer = new Schema(
   { versionKey: false, strictQuery: true }
 );
 
+
 Customer.methods.toJSON = function() {
     const customer = this.toObject();
     delete customer.password;
