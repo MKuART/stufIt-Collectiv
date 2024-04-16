@@ -32,7 +32,7 @@ const TestCookie = () => {
     };
 
     checkCookie();
-  }, [navigate]);
+  }, []);
 
   return null; 
 };
