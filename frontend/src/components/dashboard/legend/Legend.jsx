@@ -10,7 +10,7 @@ function Legend() {
   async function fetchAccount() {
     try {
       const response = await fetch(URIAccount, {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
@@ -34,7 +34,7 @@ function Legend() {
   return (
     <div>
       <div >
-        {account && account.firstname +" "+ account.lastname }
+        {account && account.firstname +" "+ account.lastname +" "+ account.budget + "€"}
       </div>
     </div>
   )

@@ -4,15 +4,42 @@ import UserData from "../Context/UserData.jsx";
 
 const URIAccount = "http://localhost:1305/account";
 const URICategory = "http://localhost:1305/category/findById";
+const URIExpenses = "http://localhost:1305/expenses";
 
 function Dashboard() {
-  const [account, setAccount] = useState(null);
-  const [categories, setCategories] = useState([]);
+  const [ account, setAccount ] = useState(null);
+  const [ categories, setCategories ] = useState([]);
   const { userData, setUserData } = useContext(UserData);
-  const [deleteMode, setDeleteMode] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const [newCategoryBudget, setNewCategoryBudget] = useState(0);
-  const [creatingCategory, setCreatingCategory] = useState(false); // Zustand für das Erstellen einer Kategorie
+  const [ deleteMode, setDeleteMode ] = useState(false);
+  const [ newCategoryName, setNewCategoryName ] = useState("");
+  const [ newCategoryBudget, setNewCategoryBudget ] = useState(0);
+  const [ creatingCategory, setCreatingCategory ] = useState(false); 
+  const [ expenses, setExpenses ] = useState([]);
+  const [ errorMessage, setErrorMessage ] = useState("");
+  const [ selectedCategoryId, setSelectedCategoryId ] = useState(null);
+
+  async function fetchExpenses(categoryId) {
+    try {
+      const response = await fetch(URIExpenses, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ category: categoryId }), 
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error(`Error fetching expenses: ${response.status}`); 
+      }
+      const data = await response.json(); 
+      setExpenses(data); 
+      console.log(data);
+    } catch (error) {
+      console.error("Error fetching expenses data:", error); 
+      setErrorMessage("fetch failed", userData);
+    }
+  }
+
 
   async function fetchCategories() {
     try {
@@ -111,40 +138,93 @@ function Dashboard() {
     deleteCategory(categoryId);
   };
 
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategoryId(categoryId); 
+    fetchExpenses(categoryId); 
+  };
+
   useEffect(() => {
-    fetchCategories();
-    fetchAccount();
-  }, []);
+    fetchExpenses(selectedCategoryId);
+  }, [selectedCategoryId]);
+
+  useEffect(() => {
+  fetchCategories();
+  fetchAccount();
+}, []);
+
+useEffect(() => {
+  fetchExpenses(selectedCategoryId);
+}, [selectedCategoryId]);
+
+
+  const categoryBudgets = categories.map(category => category.limitedBudget);
+  const sumCategoryBudgets = categoryBudgets.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  const totalRest = userData.budget - sumCategoryBudgets
+  const getColor = (percent) => {
+    if (percent > 50 ) {
+      return 'greenyellow';
+    } else if ( percent > 30 ) {
+      return 'yellow';
+    } else {
+      return 'red';
+    }
+  } 
+
 
   return (
     <div
       className="dashboard-container"
       style={{ height: "600px", marginTop: "150px", position: "relative" }}
     >
+      ({expenses.cost})
+      ({})
+      {totalRest}€ want to stuff
       <div className="name-container" style={{}}>
-        {<Legend categories={categories} />}
+        {<Legend />}
       </div>
       <div className="cotegory-container" style={{}}>
-        {categories ? (
-          categories.map((category) => (
-            <div
-              className="div-container"
-              key={category._id}
-              style={{ textAlign: "center" }}
-            >
-              {category.name}
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
 
-              {deleteMode && (
-                <div
-                  className="deleteIcon"
-                  onClick={() => handleDeleteClick(category._id)}
-                >
-                  X
-                </div>
+
+
+      {categories && userData ? (
+        categories.map((category) => {
+          const categoryExpenses = expenses.filter(expense => expense.category.includes(category._id));
+          const totalExpenseCost = categoryExpenses.reduce((acc, curr) => acc + curr.cost, 0);
+          const currentPercent = (((totalExpenseCost / category.limitedBudget) * 100) - 100) * -1;
+          
+
+          return (
+            <div key={category._id} className="div-container">
+              <div onClick={() => handleCategoryClick(category._id)}>
+                {category.name}
+              </div>
+              {selectedCategoryId === category._id && (
+                <ul>
+                  {categoryExpenses.map((expense) => (
+                    <li key={expense._id}>
+                      {expense.description}: {expense.cost}€
+                    </li>
+                  ))}
+                </ul>
               )}
+             
+              <div 
+                className="procent-container" 
+                style={{ 
+                  "--current-percent": `${currentPercent}%`,
+                  backgroundImage: `conic-gradient(
+                    ${getColor(currentPercent)} var(--current-percent), 
+                    #545F66 var(--current-percent),
+                    #545F66 100%)`,
+                  zIndex: '-1'
+                }}
+              />
             </div>
-          ))
-        ) : (
+            
+          );
+        })
+      ) : (
           <p>Loading...</p>
         )}
       </div>
@@ -162,12 +242,12 @@ function Dashboard() {
           left: "2vh",
         }}
       >
-        {!creatingCategory && ( // Nur anzeigen, wenn keine Kategorie erstellt wird
+        {!creatingCategory && ( 
           <button className="btn" onClick={() => setCreatingCategory(true)}>
             Kategorie erstellen
           </button>
         )}
-        {creatingCategory && ( // Zeige die Eingabefelder nur an, wenn eine Kategorie erstellt wird
+        {creatingCategory && ( 
           <>
             <input
               type="text"

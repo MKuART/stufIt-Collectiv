@@ -5,7 +5,7 @@ const router = express.Router()
 
 router
 .route("/")
-.get(AllExpenses)
+.post(AllExpenses)
 
 router
 .route("/create")

@@ -63,3 +63,11 @@
   text-align: center;
   color: #ffffff;
 }
+/* unused-css.com */
+.procent-container {
+  height: 116px;
+  width: 116px;
+  border-radius: 50%;
+  position: absolute;
+}
+
