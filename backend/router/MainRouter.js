@@ -17,10 +17,10 @@ router
 .use("/account", AccountRoute)
 
 router
-.use("/expenses",authorize(["Admin", "User"]), ExpensesRoute)
+.use("/expenses", ExpensesRoute)
 
 router
-.use("/category",authorize(["Admin"]) ,CategoryRoute)
+.use("/category", CategoryRoute)
 
 router
 .route("/check-cookie")

@@ -67,6 +67,7 @@ export const createCustomer = async (req, res, next) => {
 };
 
 export const createAccount = async (req, res, next) => {
+  
   try {
     req.body.password = await hashPassword(req.body.password)
     res.status(200).json(await Account.create(req.body));
@@ -78,6 +79,7 @@ export const createAccount = async (req, res, next) => {
 
 export const createExpenses = async (req, res, next) => {
   try {
+    
     const newExpense = await Expenses.create(req.body);
     if (!newExpense){
       throw new Error(`Ausgabe konnte nicht erstellt werden.`)}
@@ -114,13 +116,12 @@ export const createExpenses = async (req, res, next) => {
 };
 
 export const createCategory = async (req, res, next) => {
-  console.log(req.body);
+  
   try { 
-    
     const newCategory = await Category.create(req.body);
     if (!newCategory){
       throw new Error(`Kategorie konnte nicht erstellt werden.`)}
-    
+    console.log(newCategory);
     const account = await Account.findById(req.body.account);
     if (!account){
       throw new Error(`Account nicht gefunden.`)
@@ -129,7 +130,7 @@ export const createCategory = async (req, res, next) => {
     if (req.body.limitedBudget > account.budget){
       throw new Error(`Nicht genügend Budget vorhanden, minimiere den eingegeben Wert.`)
     }
-
+    
     await Account.updateMany(
       {_id: newCategory.account},
       {$inc: {budget: -newCategory.limitedBudget}}
@@ -158,7 +159,7 @@ export const findCustomer = async (req, res, next) => {
 
 export const findAccount = async (req, res, next) => {
   try {
-    res.status(200).json(await Account.findById(req.body.id, {deleted: false}));
+    res.status(200).json(await Account.findById(req.body._id, {deleted: false}));
   } catch (error) {
     next(error);
   }
@@ -347,26 +348,26 @@ export const softDeleteCustomer = async(req, res, next) => {
 export const softDeleteCategory = async(req, res, next) => {
   try{
     const foundUser = await Category.findById(req.body._id)
-    console.log(foundUser)
     if(!foundUser){
       const error = new Error("No category to delete!")
       error.statusCode = 404;
-      next(error)
+      return next(error)
     }
 
     if(foundUser.deleted === "true"){
       const error = new Error("account already deleted")
       error.statusCode = 404;
-      next(error)
+      return next(error)
     }
+
     foundUser.deleted = true
     await Account.updateOne(foundUser)
-    res.clearCookie("jwt", {
+    return res.clearCookie("jwt", {
       httpOnly: true,
       sameSite: "none",
     secure: true
     }).status(200).json({message: "Category successfully deleted!"})
-  }catch(error){
+  } catch(error){
     next(error)
   }
 }
@@ -434,20 +435,17 @@ export const hardDeleteCustomer = async(req, res, next) => {
   }
 }
 export const hardDeleteCategory = async(req, res, next) => {
-  console.log("test");
+  
   try{
-   const deletedCategory = await Category.findByIdAndDelete(req.body._id)
+   const deletedCategory = await Category.findByIdAndDelete(req.body)
+   
    if(!deletedCategory){
     console.log(deletedCategory);
     const error = new Error("No category to delete!")
     error.statusCode = 404;
-    next(error)
+   return next(error)
    }
-    res.clearCookie("jwt", {
-      httpOnly: true,
-      sameSite: "none",
-    secure: true
-    }).status(200).json({message: "Category deleted!", deletedCategory: deletedCategory})
+  res.status(200).json({message: "Category deleted!", deletedCategory: deletedCategory})
   }catch(error){
     next(error)
   }
