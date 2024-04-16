@@ -4,6 +4,7 @@ import { AllExpenses, authorize, createExpenses, softDeleteExpenses, updateExpen
 const router = express.Router()
 
 router
+
 .route("/", authorize(["Admin", "User"]))
 .post(AllExpenses)
 

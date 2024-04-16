@@ -522,11 +522,12 @@ export const accountLogin = async (req, res, next) => {
       error.statusCode = 404;
       next(error);
     }
-
+  
     const token = issueJwt(searchEmail);
     res.cookie("jwt", token, {
       httpOnly: true,
       sameSite: "none",
+
       secure: true,
     });
     res.status(200).json({ token, searchEmail });
