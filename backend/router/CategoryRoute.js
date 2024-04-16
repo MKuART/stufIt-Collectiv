@@ -4,23 +4,23 @@ import { AllCategorys, authorize, createCategory, findCategory, hardDeleteCatego
 const router = express.Router()
 
 router
-.route("/")
+.route("/", authorize(["Admin"]))
 .post(AllCategorys)
 
 router
-.route("/findById")
+.route("/findById", authorize(["Admin"]))
 .post(findCategory)
 
 router
-.route("/create")
+.route("/create", authorize(["Admin"]))
 .post(createCategory)
 
 router
-.route("/update")
+.route("/update", authorize(["Admin"]))
 .patch(updateCategory)
 
 router
-.route("/hard-delete")
+.route("/hard-delete", authorize(["Admin"]))
 .delete(hardDeleteCategory)
 
 export default router;

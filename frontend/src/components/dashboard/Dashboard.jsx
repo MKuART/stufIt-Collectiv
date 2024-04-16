@@ -1,11 +1,13 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Legend from "./legend/Legend.jsx";
 import UserData from "../Context/UserData.jsx";
+import { useNavigate } from "react-router-dom";
 
 const URIAccount = "http://localhost:1305/account";
-const URICategory = "http://localhost:1305/category/findById";
+const URICategory = "http://localhost:1305/category";
 
 function Dashboard() {
+  const Navigate = useNavigate();
   const [account, setAccount] = useState(null);
   const [categories, setCategories] = useState([]);
   const { userData, setUserData } = useContext(UserData);
@@ -13,10 +15,12 @@ function Dashboard() {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryBudget, setNewCategoryBudget] = useState(0);
   const [creatingCategory, setCreatingCategory] = useState(false); // Zustand für das Erstellen einer Kategorie
+  const newName = useRef(null);
+  const newBudget = useRef(null);
 
   async function fetchCategories() {
     try {
-      const response = await fetch(URICategory, {
+      const response = await fetch(`${URICategory}/findById`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -38,21 +42,27 @@ function Dashboard() {
       console.log(`Error: ${error}`);
     }
   }
+  console.log(userData);
 
   async function fetchAccount() {
     try {
-      const response = await fetch(URIAccount, {
+      const response = await fetch(`${URIAccount}/findById`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: userData.role,
         },
         credentials: "include",
+        body: JSON.stringify(userData),
       });
+      const data = await response.json();
+
       if (!response.ok) {
         console.error("Error fetching account data:", response.statusText);
       } else {
+        setUserData(data);
         console.log("Succsessful:", response.statusText);
+        console.log(userData);
       }
     } catch (error) {
       console.log(`Error: ${error}`);
@@ -60,25 +70,35 @@ function Dashboard() {
   }
 
   const createCategory = async () => {
+    console.log(
+      "Creating category with name:",
+      newName.current.value,
+      "and budget:",
+      newBudget.current.value
+    );
     try {
       const response = await fetch(`${URICategory}/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: userData.role,
         },
         credentials: "include",
         body: JSON.stringify({
-          name: newCategoryName,
-          budget: newCategoryBudget,
-          account: account._id,
+          name: newName.current.value,
+          budget: newBudget.current.value,
+          account: userData._id,
         }),
       });
       if (!response.ok) {
         console.error("Error creating category:", response.statusText);
       } else {
+        const data = await response.json();
+        setCategories([...categories, data.createdCategory]);
         setNewCategoryName("");
         setNewCategoryBudget(0);
-        fetchCategories(account._id);
+        Navigate("/dashboard");
+        fetchCategories()
       }
     } catch (error) {
       console.log(`Error: ${error}`);
@@ -87,20 +107,26 @@ function Dashboard() {
 
   const deleteCategory = async (categoryId) => {
     try {
+      console.log(categoryId);
+
       const response = await fetch(`${URICategory}/hard-delete`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: userData.role,
         },
         credentials: "include",
-        body: JSON.stringify({ _id: categoryId, account_id: account._id }),
+        body: JSON.stringify({ _id: categoryId }),
       });
+      const data = await response.json();
+      console.log(data);
+
       if (!response.ok) {
         console.error("Error deleting category:", response.statusText);
       } else {
-        setCategories((prevCategories) =>
-          prevCategories.filter((category) => category._id !== categoryId)
-        );
+        console.log("Category gelöscht!", response.statusText);
+        Navigate("/dashboard");
+        fetchCategories()
       }
     } catch (error) {
       console.log(`Error: ${error}`);
@@ -125,19 +151,18 @@ function Dashboard() {
         {<Legend categories={categories} />}
       </div>
       <div className="cotegory-container" style={{}}>
-        {categories ? (
+        {categories && userData ? (
           categories.map((category) => (
             <div
               className="div-container"
-              key={category._id}
+              key={category?._id}
               style={{ textAlign: "center" }}
             >
-              {category.name}
-
+              {category && category?.name}
               {deleteMode && (
                 <div
                   className="deleteIcon"
-                  onClick={() => handleDeleteClick(category._id)}
+                  onClick={() => handleDeleteClick(category?._id)}
                 >
                   X
                 </div>
@@ -162,15 +187,16 @@ function Dashboard() {
           left: "2vh",
         }}
       >
-        {!creatingCategory && ( // Nur anzeigen, wenn keine Kategorie erstellt wird
+        {!creatingCategory && (
           <button className="btn" onClick={() => setCreatingCategory(true)}>
             Kategorie erstellen
           </button>
         )}
-        {creatingCategory && ( // Zeige die Eingabefelder nur an, wenn eine Kategorie erstellt wird
-          <>
+        {creatingCategory && (
+          <div className="create-Category">
             <input
               type="text"
+              ref={newName}
               placeholder="Kategoriename"
               value={newCategoryName}
               onChange={(e) => setNewCategoryName(e.target.value)}
@@ -178,6 +204,7 @@ function Dashboard() {
             <input
               style={{ margin: "5px" }}
               type="number"
+              ref={newBudget}
               placeholder="Budget"
               value={newCategoryBudget}
               onChange={(e) => setNewCategoryBudget(parseFloat(e.target.value))}
@@ -185,7 +212,7 @@ function Dashboard() {
             <button className="btn" onClick={createCategory}>
               Kategorie erstellen
             </button>
-          </>
+          </div>
         )}
         <button
           className="btn"
