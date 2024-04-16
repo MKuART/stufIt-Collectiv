@@ -1,9 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Legend from "./legend/Legend.jsx";
 import UserData from "../Context/UserData.jsx";
+import { useNavigate } from "react-router-dom";
 
 const URIAccount = "http://localhost:1305/account";
-const URICategory = "http://localhost:1305/category/findById";
+const URICategory = "http://localhost:1305/category";
 const URIExpenses = "http://localhost:1305/expenses";
 
 function Dashboard() {
@@ -41,9 +42,22 @@ function Dashboard() {
   }
 
 
+
+function Dashboard() {
+  const Navigate = useNavigate();
+  const [account, setAccount] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const { userData, setUserData } = useContext(UserData);
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryBudget, setNewCategoryBudget] = useState(0);
+  const [creatingCategory, setCreatingCategory] = useState(false); // Zustand für das Erstellen einer Kategorie
+  const newName = useRef(null);
+  const newBudget = useRef(null);
+
   async function fetchCategories() {
     try {
-      const response = await fetch(URICategory, {
+      const response = await fetch(`${URICategory}/findById`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,33 +67,37 @@ function Dashboard() {
         credentials: "include",
       });
       const data = await response.json();
-      setCategories(data.foundCategories);
-      console.log(data.foundCategories);
-
       if (!response.ok) {
         console.error("Error fetching category data:", response.statusText);
       } else {
         console.log("Erfolgreich", response.statusText);
+        setCategories(data.foundCategories);
       }
     } catch (error) {
       console.log(`Error: ${error}`);
     }
   }
 
+
   async function fetchAccount() {
     try {
-      const response = await fetch(URIAccount, {
+      const response = await fetch(`${URIAccount}/findById`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: userData.role,
         },
         credentials: "include",
+        body: JSON.stringify(userData),
       });
+      const data = await response.json();
+
       if (!response.ok) {
         console.error("Error fetching account data:", response.statusText);
       } else {
+        setUserData(data);
         console.log("Succsessful:", response.statusText);
+        console.log(userData);
       }
     } catch (error) {
       console.log(`Error: ${error}`);
@@ -87,47 +105,100 @@ function Dashboard() {
   }
 
   const createCategory = async () => {
+    console.log(
+      "Creating category with name:",
+      newName.current.value,
+      "and budget:",
+      newBudget.current.value
+    );
     try {
       const response = await fetch(`${URICategory}/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: userData.role,
         },
         credentials: "include",
         body: JSON.stringify({
-          name: newCategoryName,
-          budget: newCategoryBudget,
-          account: account._id,
+          name: newName.current.value,
+          budget: newBudget.current.value,
+          account: userData._id,
         }),
       });
+      const data = await response.json();
+        await fetchAccount();
+        await fetchCategories();
+       setNewCategoryName("");
+       setNewCategoryBudget(0);
+      
       if (!response.ok) {
         console.error("Error creating category:", response.statusText);
-      } else {
-        setNewCategoryName("");
-        setNewCategoryBudget(0);
-        fetchCategories(account._id);
+      } else { 
+        setCategories((prevCategories) => [
+          ...prevCategories,
+          data,
+        ]);
       }
     } catch (error) {
       console.log(`Error: ${error}`);
     }
   };
+  
 
+  const deleteOneCategoryFromAccount = async (newCategory) => {
+    try {
+      console.log("Userdata Id:", userData._id,  "Category-Id: ", newCategory);
+      
+      const response = await fetch(`${URIAccount}/update`, {
+        method: "PATCH", 
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userData.role,
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          userId: userData._id, 
+          categoryIdToRemove: newCategory 
+        }),
+      });
+      const data = await response.json();
+      console.log("Data: ", data);
+      
+      if (!response.ok) {
+        console.error("Error deleting category:", response.statusText);
+      } else {
+        console.log("Category deleted!", response.statusText);
+
+        setUserData({ ...userData, category: userData.category.filter(catId => catId !== newCategory) });
+
+      }
+    } catch(error) {
+      console.error("Error: ", error)
+    }
+  }
+  
   const deleteCategory = async (categoryId) => {
     try {
+      const newCategoryId = categoryId
       const response = await fetch(`${URICategory}/hard-delete`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: userData.role,
         },
         credentials: "include",
-        body: JSON.stringify({ _id: categoryId, account_id: account._id }),
+        body: JSON.stringify({ _id: categoryId }),
       });
+      const data = await response.json();
+      console.log(data);
+
       if (!response.ok) {
         console.error("Error deleting category:", response.statusText);
       } else {
-        setCategories((prevCategories) =>
-          prevCategories.filter((category) => category._id !== categoryId)
-        );
+        console.log("Category gelöscht!", response.statusText);
+        
+        fetchCategories()
+        deleteOneCategoryFromAccount(newCategoryId)
       }
     } catch (error) {
       console.log(`Error: ${error}`);
@@ -148,6 +219,7 @@ function Dashboard() {
   }, [selectedCategoryId]);
 
   useEffect(() => {
+
   fetchCategories();
   fetchAccount();
 }, []);
@@ -171,6 +243,10 @@ useEffect(() => {
   } 
 
 
+
+
+  console.log(categories);
+  
   return (
     <div
       className="dashboard-container"
@@ -183,6 +259,7 @@ useEffect(() => {
         {<Legend />}
       </div>
       <div className="cotegory-container" style={{}}>
+
       {errorMessage && <div className="error-message">{errorMessage}</div>}
 
 
@@ -225,9 +302,30 @@ useEffect(() => {
           );
         })
       ) : (
-          <p>Loading...</p>
+          <p>Loading...</p>)}
+
+  {categories && userData ? (
+    categories.map((category) => (
+      <div
+        className="div-container"
+        key={category?._id}
+        style={{ textAlign: "center" }}
+      >
+        {category && category?.name}
+        {deleteMode && (
+          <div
+            className="deleteIcon"
+            onClick={() => handleDeleteClick(category?._id)}
+          >
+            X
+          </div>
         )}
       </div>
+    ))
+  ) : (
+    <p>Loading...</p>
+  )}
+</div>
       <div
         className="join-container"
         style={{
@@ -242,15 +340,18 @@ useEffect(() => {
           left: "2vh",
         }}
       >
-        {!creatingCategory && ( 
+
+        {!creatingCategory && (
           <button className="btn" onClick={() => setCreatingCategory(true)}>
             Kategorie erstellen
           </button>
         )}
-        {creatingCategory && ( 
-          <>
+
+        {creatingCategory && (
+          <div className="create-Category">
             <input
               type="text"
+              ref={newName}
               placeholder="Kategoriename"
               value={newCategoryName}
               onChange={(e) => setNewCategoryName(e.target.value)}
@@ -258,6 +359,7 @@ useEffect(() => {
             <input
               style={{ margin: "5px" }}
               type="number"
+              ref={newBudget}
               placeholder="Budget"
               value={newCategoryBudget}
               onChange={(e) => setNewCategoryBudget(parseFloat(e.target.value))}
@@ -265,7 +367,7 @@ useEffect(() => {
             <button className="btn" onClick={createCategory}>
               Kategorie erstellen
             </button>
-          </>
+          </div>
         )}
         <button
           className="btn"
