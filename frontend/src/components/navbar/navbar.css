@@ -1,35 +1,60 @@
 @media (min-width: 1051px) {
   .full-screen-navbar {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     background-color: #71a9f7;
     height: 100px;
+    border-radius: 16px;
+    position: relative;
+    box-shadow: 
+    0px -23px 25px 0px rgba(0,0,0,0.17) inset,
+    0px -36px 30px 0px rgba(0,0,0,0.15) inset,
+    0px -79px 40px 0px rgba(0,0,0,0.1) inset,
+    0px 2px 1px 0px rgba(0,0,0,0.06),
+    0px 4px 2px 0px rgba(0,0,0,0.09),
+    0px 8px 4px 0px rgba(0,0,0,0.09),
+    0px 16px 8px 0px rgba(0,0,0,0.09);
   }
+
 
   .full-screen-dropdown ul {
     list-style: none;
     display: flex;
-    justify-content: space-between;
-    gap: 50px;
+    justify-content: center;
+    align-items: center;
+    margin-right: 100px;
+    gap: 40px;
   }
   
   a{
     color: rgb(0, 0, 0);
     text-decoration: none;
   }
+  
+
 }
 
 @media (max-width: 1050px) {
+  .show{
+    display: none;
+  }
   .drop-down-container {
     background: #71a9f7;
-    height: 90px;
+    height: 100px;
     width: 100px;
-    top: 0px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     border-radius: 16px;
+    box-shadow: 
+    0px -23px 25px 0px rgba(0,0,0,0.17) inset,
+    0px -36px 30px 0px rgba(0,0,0,0.15) inset,
+    0px -79px 40px 0px rgba(0,0,0,0.1) inset,
+    0px 2px 1px 0px rgba(0,0,0,0.06),
+    0px 4px 2px 0px rgba(0,0,0,0.09),
+    0px 8px 4px 0px rgba(0,0,0,0.09),
+    0px 16px 8px 0px rgba(0,0,0,0.09);
   }
   .nav-container {
     background-color: #545f66;
@@ -48,10 +73,33 @@
   }
 
   .dropdown {
+    width: 100px;
+    height: 100px;
     position: absolute;
-    height: 200px;
-    width: 48%;
-    top: 20px;
+    margin-right: 24rem; 
+    top: 1rem;
   }
+  .dropdown li{
+    width: 150px;
+    height: 40px;
+    text-align: center;
+    background-color: #71a9f7;
+    list-style: none;
+    border: 1px solid rgb(131, 127, 127);
+    border-radius: 3px;
+    box-shadow: 
+    0px -23px 25px 0px rgba(0,0,0,0.17) inset,
+    0px -36px 30px 0px rgba(0,0,0,0.15) inset,
+    0px -79px 40px 0px rgba(0,0,0,0.1) inset,
+    0px 2px 1px 0px rgba(0,0,0,0.06),
+    0px 4px 2px 0px rgba(0,0,0,0.09),
+    0px 8px 4px 0px rgba(0,0,0,0.09),
+    0px 16px 8px 0px rgba(0,0,0,0.09);
+  }
+  .dropdown a{
+    text-decoration: none;
+    color: black;
+  }
+
   
 }

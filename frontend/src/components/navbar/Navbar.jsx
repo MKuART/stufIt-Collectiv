@@ -29,46 +29,36 @@ function NavbarCompo() {
       <Navbar expand="lg" className="full-screen-navbar nav-container">
         <Logo></Logo>
 
-        <div onClick={toggleDropdown} className="drop-down-container">
+        <div onClick={toggleDropdown} className={`drop-down-container ${showDropdown ? 'show' : ''}`}>
           <div className="white-bar"></div>
           <div className="white-bar"></div>
           <div className="white-bar"></div>
-          {showDropdown && (
-            <div className="dropdown full-screen-dropdown">
-              <ul>
-                {userId && (
+          <div className={`dropdown full-screen-dropdown ${showDropdown ? 'show' : ''}`}>
+            <ul>
+              <li>
+                <NavLink to="/login">Login</NavLink>
+              </li>
+              <li>
+                <NavLink to="/registry">Registry</NavLink>
+              </li>
+              <li>
+                <NavLink to="/gast">Gast</NavLink>
+              </li>
+              {userId && (
+                <>
                   <li>
                     <NavLink to="/dashboard">Dashboard</NavLink>
                   </li>
-                )}
-                {userId && (
                   <li>
                     <NavLink to="/profile">Profile</NavLink>
                   </li>
-                )}
-                {userId && (
                   <li>
                     <button onClick={handleLogout}>Logout</button>
                   </li>
-                )}
-                {!userId && (
-                  <li>
-                    <NavLink to="/login">Login</NavLink>
-                  </li>
-                )}
-                {!userId && (
-                  <li>
-                    <NavLink to="/registry">Registry</NavLink>
-                  </li>
-                )}
-                {!userId && (
-                  <li>
-                    <NavLink to="/gast">Gast</NavLink>
-                  </li>
-                )}
-              </ul>
-            </div>
-          )}
+                </>
+              )}
+            </ul>
+          </div>
         </div>
       </Navbar>
       <Routes>
