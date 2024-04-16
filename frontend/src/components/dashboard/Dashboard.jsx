@@ -251,6 +251,7 @@ function Dashboard() {
             );
             const currentPercent =
               ((totalExpenseCost / category.limitedBudget) * 100 - 100) * -1;
+              
 
             return (
               <div key={category._id} className="div-container">
@@ -278,22 +279,7 @@ function Dashboard() {
                     zIndex: "-1",
                   }}
                 />
-              </div>
-            );
-          })
-        ) : (
-          <p>Loading...</p>
-        )}
-
-        {categories && userData ? (
-          categories.map((category) => (
-            <div
-              className="div-container"
-              key={category?._id}
-              style={{ textAlign: "center" }}
-            >
-              {category && category?.name}
-              {deleteMode && (
+                {deleteMode && (
                 <div
                   className="deleteIcon"
                   onClick={() => handleDeleteClick(category?._id)}
@@ -301,8 +287,9 @@ function Dashboard() {
                   X
                 </div>
               )}
-            </div>
-          ))
+              </div>
+            );
+          })
         ) : (
           <p>Loading...</p>
         )}
