@@ -238,7 +238,7 @@ function Dashboard() {
         {<Legend />}
       </div>
       <div className="cotegory-container" style={{}}>
-        {errorMessage && <div className="error-message">{errorMessage}</div>}
+        {errorMessage && <div className="error-messages">{errorMessage}</div>}
 
         {categories && userData ? (
           categories.map((category) => {
