@@ -30,19 +30,17 @@ function Dashboard() {
         credentials: "include",
       });
       const data = await response.json();
-      setCategories(data.foundCategories);
-      console.log(data.foundCategories);
-
       if (!response.ok) {
         console.error("Error fetching category data:", response.statusText);
       } else {
         console.log("Erfolgreich", response.statusText);
+        setCategories(data.foundCategories);
       }
     } catch (error) {
       console.log(`Error: ${error}`);
     }
   }
-  console.log(userData);
+
 
   async function fetchAccount() {
     try {
@@ -90,25 +88,61 @@ function Dashboard() {
           account: userData._id,
         }),
       });
+      const data = await response.json();
+        await fetchAccount();
+        await fetchCategories();
+       setNewCategoryName("");
+       setNewCategoryBudget(0);
+      
       if (!response.ok) {
         console.error("Error creating category:", response.statusText);
-      } else {
-        const data = await response.json();
-        setCategories([...categories, data.createdCategory]);
-        setNewCategoryName("");
-        setNewCategoryBudget(0);
-        Navigate("/dashboard");
-        fetchCategories()
+      } else { 
+        setCategories((prevCategories) => [
+          ...prevCategories,
+          data,
+        ]);
       }
     } catch (error) {
       console.log(`Error: ${error}`);
     }
   };
+  
 
+  const deleteOneCategoryFromAccount = async (newCategory) => {
+    try {
+      console.log("Userdata Id:", userData._id,  "Category-Id: ", newCategory);
+      
+      const response = await fetch(`${URIAccount}/update`, {
+        method: "PATCH", 
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userData.role,
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          userId: userData._id, 
+          categoryIdToRemove: newCategory 
+        }),
+      });
+      const data = await response.json();
+      console.log("Data: ", data);
+      
+      if (!response.ok) {
+        console.error("Error deleting category:", response.statusText);
+      } else {
+        console.log("Category deleted!", response.statusText);
+
+        setUserData({ ...userData, category: userData.category.filter(catId => catId !== newCategory) });
+
+      }
+    } catch(error) {
+      console.error("Error: ", error)
+    }
+  }
+  
   const deleteCategory = async (categoryId) => {
     try {
-      console.log(categoryId);
-
+      const newCategoryId = categoryId
       const response = await fetch(`${URICategory}/hard-delete`, {
         method: "DELETE",
         headers: {
@@ -125,8 +159,9 @@ function Dashboard() {
         console.error("Error deleting category:", response.statusText);
       } else {
         console.log("Category gelöscht!", response.statusText);
-        Navigate("/dashboard");
+        
         fetchCategories()
+        deleteOneCategoryFromAccount(newCategoryId)
       }
     } catch (error) {
       console.log(`Error: ${error}`);
@@ -138,10 +173,12 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    fetchCategories();
-    fetchAccount();
+   fetchCategories();
+   fetchAccount();
   }, []);
 
+  console.log(categories);
+  
   return (
     <div
       className="dashboard-container"
@@ -151,28 +188,28 @@ function Dashboard() {
         {<Legend categories={categories} />}
       </div>
       <div className="cotegory-container" style={{}}>
-        {categories && userData ? (
-          categories.map((category) => (
-            <div
-              className="div-container"
-              key={category?._id}
-              style={{ textAlign: "center" }}
-            >
-              {category && category?.name}
-              {deleteMode && (
-                <div
-                  className="deleteIcon"
-                  onClick={() => handleDeleteClick(category?._id)}
-                >
-                  X
-                </div>
-              )}
-            </div>
-          ))
-        ) : (
-          <p>Loading...</p>
+  {categories && userData ? (
+    categories.map((category) => (
+      <div
+        className="div-container"
+        key={category?._id}
+        style={{ textAlign: "center" }}
+      >
+        {category && category?.name}
+        {deleteMode && (
+          <div
+            className="deleteIcon"
+            onClick={() => handleDeleteClick(category?._id)}
+          >
+            X
+          </div>
         )}
       </div>
+    ))
+  ) : (
+    <p>Loading...</p>
+  )}
+</div>
       <div
         className="join-container"
         style={{

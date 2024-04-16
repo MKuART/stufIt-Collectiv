@@ -5,7 +5,7 @@ const router = express.Router()
 
 router
 .route("/", authorize(["Admin", "User"]))
-.get(AllExpenses)
+.post(AllExpenses)
 
 router
 .route("/create", authorize(["Admin", "User"]))

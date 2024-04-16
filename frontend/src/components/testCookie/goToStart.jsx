@@ -27,7 +27,7 @@ const GoToStart = () => {
     };
 
     checkCookie();
-  }, [navigate]);
+  }, []);
 
   return null; 
 };

@@ -6,7 +6,7 @@ const router = express.Router()
 
 router
 .route("/")
-.get(AllCustomers)
+.post(AllCustomers)
 
 router
 .route("/create")
