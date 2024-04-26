@@ -332,7 +332,7 @@ function Dashboard() {
               onChange={(e) => setNewCategoryBudget(parseFloat(e.target.value))}
             />
             <button className="btn" onClick={createCategory}>
-              Kategorie erstellen
+              Kategorie erstellen 
             </button>
           </div>
         )}
